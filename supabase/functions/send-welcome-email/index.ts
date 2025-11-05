@@ -16,7 +16,7 @@ const sendResendEmail = async (to: string, subject: string, html: string) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "AstroInsight <onboarding@resend.dev>",
+      from: "AstroInsight <noreply@eclyptica.com>",
       to: [to],
       subject,
       html,
