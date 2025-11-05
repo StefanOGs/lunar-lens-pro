@@ -44,6 +44,19 @@ const Auth = () => {
 
       if (error) throw error;
 
+      // Send welcome email in background
+      try {
+        await supabase.functions.invoke("send-welcome-email", {
+          body: {
+            email: email,
+            fullName: fullName || email.split("@")[0],
+          },
+        });
+      } catch (emailError) {
+        console.error("Failed to send welcome email:", emailError);
+        // Don't block registration if email fails
+      }
+
       toast({
         title: "Регистрацията е успешна!",
         description: "Влезте в акаунта си, за да продължите.",
