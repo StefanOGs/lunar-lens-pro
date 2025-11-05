@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles, LogOut, User as UserIcon } from "lucide-react";
+import { Sparkles, LogOut, User as UserIcon, Settings } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import ProfileSetup from "@/components/ProfileSetup";
 import HoroscopeDisplay from "@/components/HoroscopeDisplay";
@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -66,9 +67,10 @@ const Dashboard = () => {
   const handleProfileCreated = async () => {
     if (user) {
       await loadProfile(user.id);
+      setIsEditingProfile(false);
       toast({
-        title: "Профилът е създаден!",
-        description: "Вашият персонализиран хороскоп е готов.",
+        title: isEditingProfile ? "Профилът е актуализиран!" : "Профилът е създаден!",
+        description: isEditingProfile ? "Промените са запазени успешно." : "Вашият персонализиран хороскоп е готов.",
       });
     }
   };
@@ -106,25 +108,55 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {!profile ? (
+        {!profile || isEditingProfile ? (
           <div className="max-w-2xl mx-auto">
             <Card className="bg-card/80 backdrop-blur-sm">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto mb-4">
                   <Sparkles className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <CardTitle className="text-2xl">Създайте Вашия Астрологичен Профил</CardTitle>
+                <CardTitle className="text-2xl">
+                  {isEditingProfile ? "Редактирайте Вашия Профил" : "Създайте Вашия Астрологичен Профил"}
+                </CardTitle>
                 <CardDescription>
-                  Въведете вашите данни за раждане, за да получите персонализирани хороскопи
+                  {isEditingProfile 
+                    ? "Променете вашите данни за раждане" 
+                    : "Въведете вашите данни за раждане, за да получите персонализирани хороскопи"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ProfileSetup userId={user?.id || ''} onProfileCreated={handleProfileCreated} />
+                <ProfileSetup 
+                  userId={user?.id || ''} 
+                  onProfileCreated={handleProfileCreated}
+                  existingProfile={profile}
+                  isEditing={isEditingProfile}
+                />
+                {isEditingProfile && (
+                  <Button 
+                    variant="ghost" 
+                    className="w-full mt-4" 
+                    onClick={() => setIsEditingProfile(false)}
+                  >
+                    Отказ
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </div>
         ) : (
-          <HoroscopeDisplay profile={profile} />
+          <div>
+            <div className="flex justify-end mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setIsEditingProfile(true)}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Редактирай Профил
+              </Button>
+            </div>
+            <HoroscopeDisplay profile={profile} />
+          </div>
         )}
       </main>
     </div>

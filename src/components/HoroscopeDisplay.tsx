@@ -58,10 +58,12 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
     else if (value === 'monthly' && !monthlyHoroscope) generateHoroscope('monthly');
   };
 
-  // Load daily horoscope on mount
+  // Load daily horoscope on mount and when zodiac sign changes
   useEffect(() => {
-    generateHoroscope('daily');
-  }, []);
+    if (profile.zodiac_sign) {
+      generateHoroscope('daily');
+    }
+  }, [profile.zodiac_sign]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
