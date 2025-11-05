@@ -14,7 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          birth_date: string
+          birth_place: string | null
+          birth_time: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+          zodiac_sign: string
+        }
+        Insert: {
+          birth_date: string
+          birth_place?: string | null
+          birth_time?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+          zodiac_sign: string
+        }
+        Update: {
+          birth_date?: string
+          birth_place?: string | null
+          birth_time?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+          zodiac_sign?: string
+        }
+        Relationships: []
+      }
+      saved_horoscopes: {
+        Row: {
+          content: string
+          created_at: string
+          horoscope_date: string
+          horoscope_type: string
+          id: string
+          user_id: string
+          zodiac_sign: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          horoscope_date: string
+          horoscope_type: string
+          id?: string
+          user_id: string
+          zodiac_sign: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          horoscope_date?: string
+          horoscope_type?: string
+          id?: string
+          user_id?: string
+          zodiac_sign?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

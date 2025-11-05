@@ -31,10 +31,10 @@ export const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button size="lg" className="text-lg shadow-glow">
-              Получете Безплатен Хороскоп
+            <Button size="lg" className="text-lg shadow-glow" onClick={() => window.location.href = '/auth'}>
+              Започнете Безплатно
             </Button>
-            <Button size="lg" variant="outline" className="text-lg border-primary/50 hover:bg-primary/10">
+            <Button size="lg" variant="outline" className="text-lg border-primary/50 hover:bg-primary/10" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
               Вижте Услугите
             </Button>
           </div>
