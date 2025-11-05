@@ -16,9 +16,10 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
   const [dailyHoroscope, setDailyHoroscope] = useState("");
   const [weeklyHoroscope, setWeeklyHoroscope] = useState("");
   const [monthlyHoroscope, setMonthlyHoroscope] = useState("");
+  const [yearlyHoroscope, setYearlyHoroscope] = useState("");
   const [activeTab, setActiveTab] = useState("daily");
 
-  const generateHoroscope = async (type: 'daily' | 'weekly' | 'monthly') => {
+  const generateHoroscope = async (type: 'daily' | 'weekly' | 'monthly' | 'yearly') => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-horoscope', {
@@ -33,6 +34,7 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
       if (type === 'daily') setDailyHoroscope(data.horoscope);
       else if (type === 'weekly') setWeeklyHoroscope(data.horoscope);
       else if (type === 'monthly') setMonthlyHoroscope(data.horoscope);
+      else if (type === 'yearly') setYearlyHoroscope(data.horoscope);
 
       if (data.cached) {
         toast({
@@ -56,6 +58,7 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
     if (value === 'daily' && !dailyHoroscope) generateHoroscope('daily');
     else if (value === 'weekly' && !weeklyHoroscope) generateHoroscope('weekly');
     else if (value === 'monthly' && !monthlyHoroscope) generateHoroscope('monthly');
+    else if (value === 'yearly' && !yearlyHoroscope) generateHoroscope('yearly');
   };
 
   // Load daily horoscope on mount and when zodiac sign changes
@@ -85,7 +88,7 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="daily">
                 <Calendar className="w-4 h-4 mr-2" />
                 Дневен
@@ -97,6 +100,10 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
               <TabsTrigger value="monthly">
                 <Star className="w-4 h-4 mr-2" />
                 Месечен
+              </TabsTrigger>
+              <TabsTrigger value="yearly">
+                <Star className="w-4 h-4 mr-2" />
+                Годишен
               </TabsTrigger>
             </TabsList>
 
@@ -175,6 +182,33 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
                   <div className="prose prose-invert max-w-none">
                     <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                       {monthlyHoroscope || "Зареждане..."}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="yearly" className="mt-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl font-semibold">Годишен хороскоп за {profile.zodiac_sign}</h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => generateHoroscope('yearly')}
+                    disabled={loading}
+                  >
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Обнови"}
+                  </Button>
+                </div>
+                {loading && !yearlyHoroscope ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  </div>
+                ) : (
+                  <div className="prose prose-invert max-w-none">
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                      {yearlyHoroscope || "Зареждане..."}
                     </p>
                   </div>
                 )}

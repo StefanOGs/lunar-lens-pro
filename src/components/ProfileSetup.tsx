@@ -138,13 +138,14 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="birthDate">Дата на раждане *</Label>
+        <Label htmlFor="birthDate">Дата на раждане (ДД/ММ/ГГГГ) *</Label>
         <Input
           id="birthDate"
           type="date"
           value={formData.birthDate}
           onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
           required
+          placeholder="дд.мм.гггг"
         />
       </div>
 
