@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Calendar, Clock } from "lucide-react";
 
 const zodiacSigns = [
   { value: "Овен", label: "Овен (21 март - 19 април)", startMonth: 3, startDay: 21, endMonth: 4, endDay: 19 },
@@ -138,7 +139,10 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="birthDate">Дата на раждане (ДД/ММ/ГГГГ) *</Label>
+        <Label htmlFor="birthDate" className="flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-primary" />
+          <span>Дата на раждане (ДД/ММ/ГГГГ) *</span>
+        </Label>
         <Input
           id="birthDate"
           type="date"
@@ -146,16 +150,21 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
           onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
           required
           placeholder="дд.мм.гггг"
+          className="text-base"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="birthTime">Час на раждане (незадължително)</Label>
+        <Label htmlFor="birthTime" className="flex items-center gap-2">
+          <Clock className="w-5 h-5 text-primary" />
+          <span>Час на раждане (незадължително)</span>
+        </Label>
         <Input
           id="birthTime"
           type="time"
           value={formData.birthTime}
           onChange={(e) => setFormData({ ...formData, birthTime: e.target.value })}
+          className="text-base"
         />
       </div>
 

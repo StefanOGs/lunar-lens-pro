@@ -16,13 +16,13 @@ export const Hero = () => {
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30">
             <Sparkles className="w-4 h-4 text-secondary" />
-            <span className="text-sm text-foreground">Открийте космическата си истина</span>
+            <span className="text-sm text-foreground">Вашият път сред звездите</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-mystical leading-tight">
-            Астрологични Прозрения
+            Eclyptica.com
             <br />
-            За Вашия Път
+            Астрологични Прозрения
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
@@ -31,10 +31,14 @@ export const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button size="lg" className="text-lg shadow-glow" onClick={() => window.location.href = '/auth'}>
-              Започнете Безплатно
+            <Button 
+              size="lg" 
+              className="text-lg shadow-glow hover:shadow-[0_0_50px_hsl(var(--primary)/0.4)] transition-all duration-300 animate-pulse-glow" 
+              onClick={() => window.location.href = '/auth'}
+            >
+              Открийте космическата си истина
             </Button>
-            <Button size="lg" variant="outline" className="text-lg border-primary/50 hover:bg-primary/10" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
+            <Button size="lg" variant="outline" className="text-lg border-primary/50 hover:bg-primary/10 transition-all duration-300" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
               Вижте Услугите
             </Button>
           </div>

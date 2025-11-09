@@ -141,7 +141,7 @@ const Admin = () => {
       }
 
       const response = await fetch(
-        `${supabase.supabaseUrl}/functions/v1/delete-user`,
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`,
         {
           method: "POST",
           headers: {

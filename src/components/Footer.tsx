@@ -10,7 +10,7 @@ export const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-primary" />
-              <span className="text-xl font-bold">AstroInsight</span>
+              <span className="text-xl font-bold">Eclyptica.com</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Вашият водач в космическата мъдрост и астрологичните прозрения
@@ -49,7 +49,7 @@ export const Footer = () => {
         </div>
         
         <div className="pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
-          <p>© {currentYear} AstroInsight. Всички права запазени.</p>
+          <p>© {currentYear} Eclyptica.com. Всички права запазени.</p>
         </div>
       </div>
     </footer>
