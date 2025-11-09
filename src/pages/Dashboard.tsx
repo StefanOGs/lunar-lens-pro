@@ -92,7 +92,7 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-primary" />
-            <span className="text-xl font-bold">AstroInsight</span>
+            <span className="text-xl font-bold">Eclyptica</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm">

@@ -140,7 +140,7 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
 
       <div className="space-y-2">
         <Label htmlFor="birthDate" className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
+          <Calendar className="w-5 h-5 text-primary flex-shrink-0" />
           <span>Дата на раждане (ДД/ММ/ГГГГ) *</span>
         </Label>
         <Input
@@ -156,7 +156,7 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
 
       <div className="space-y-2">
         <Label htmlFor="birthTime" className="flex items-center gap-2">
-          <Clock className="w-5 h-5 text-primary" />
+          <Clock className="w-5 h-5 text-primary flex-shrink-0" />
           <span>Час на раждане (незадължително)</span>
         </Label>
         <Input

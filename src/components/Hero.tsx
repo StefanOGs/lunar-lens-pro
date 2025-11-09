@@ -20,8 +20,6 @@ export const Hero = () => {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-mystical leading-tight">
-            Eclyptica.com
-            <br />
             Астрологични Прозрения
           </h1>
           
