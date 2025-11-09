@@ -6,7 +6,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface UserData {
   id: string;
@@ -117,6 +128,52 @@ const Admin = () => {
     }
   };
 
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Грешка",
+          description: "Не сте влезли в системата",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await fetch(
+        `${supabase.supabaseUrl}/functions/v1/delete-user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ user_id: userId }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Грешка при изтриване");
+      }
+
+      toast({
+        title: "Успех",
+        description: "Потребителят е изтрит успешно",
+      });
+
+      // Reload users list
+      loadUsers();
+    } catch (error: any) {
+      toast({
+        title: "Грешка",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -158,6 +215,7 @@ const Admin = () => {
                     <TableHead>Зодия</TableHead>
                     <TableHead>Дата на раждане</TableHead>
                     <TableHead>Роли</TableHead>
+                    <TableHead className="w-[100px]">Действия</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -183,6 +241,36 @@ const Admin = () => {
                             </Badge>
                           ))}
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Изтриване на потребител</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Сигурни ли сте, че искате да изтриете този потребител? Това действие е необратимо и ще изтрие всички данни на потребителя.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Отказ</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteUser(user.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Изтрий
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))}
