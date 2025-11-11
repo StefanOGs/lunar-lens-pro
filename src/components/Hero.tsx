@@ -30,13 +30,12 @@ export const Hero = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button 
-              size="lg" 
-              className="text-lg shadow-glow hover:shadow-[0_0_50px_hsl(var(--primary)/0.4)] transition-all duration-300 animate-pulse-glow" 
+              className="text-base sm:text-lg px-6 py-2 sm:px-8 sm:py-3 shadow-glow hover:shadow-[0_0_50px_hsl(var(--primary)/0.4)] transition-all duration-300 animate-pulse-glow" 
               onClick={() => window.location.href = '/auth'}
             >
               Открийте космическата си истина
             </Button>
-            <Button size="lg" variant="outline" className="text-lg border-primary/50 hover:bg-primary/10 transition-all duration-300" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
+            <Button variant="outline" className="text-base sm:text-lg px-6 py-2 sm:px-8 sm:py-3 border-primary/50 hover:bg-primary/10 transition-all duration-300" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
               Вижте Услугите
             </Button>
           </div>
