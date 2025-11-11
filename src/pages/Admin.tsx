@@ -208,7 +208,8 @@ const Admin = () => {
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
             ) : (
-              <Table>
+              <div className="overflow-x-auto">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Име</TableHead>
@@ -276,6 +277,7 @@ const Admin = () => {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>

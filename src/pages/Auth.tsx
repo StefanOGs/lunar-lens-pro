@@ -109,7 +109,7 @@ const Auth = () => {
               <Sparkles className="w-8 h-8 text-primary-foreground" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Добре дошли в AstroInsight</CardTitle>
+          <CardTitle className="text-2xl">Добре дошли в Eclyptica</CardTitle>
           <CardDescription>
             Влезте или се регистрирайте, за да получите персонализирани хороскопи
           </CardDescription>

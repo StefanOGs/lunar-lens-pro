@@ -88,29 +88,33 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="daily">
-                <Calendar className="w-4 h-4 mr-2" />
-                Дневен
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+              <TabsTrigger value="daily" className="text-xs sm:text-sm">
+                <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Дневен</span>
+                <span className="sm:hidden">Ден</span>
               </TabsTrigger>
-              <TabsTrigger value="weekly">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Седмичен
+              <TabsTrigger value="weekly" className="text-xs sm:text-sm">
+                <TrendingUp className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Седмичен</span>
+                <span className="sm:hidden">Седм</span>
               </TabsTrigger>
-              <TabsTrigger value="monthly">
-                <Star className="w-4 h-4 mr-2" />
-                Месечен
+              <TabsTrigger value="monthly" className="text-xs sm:text-sm">
+                <Star className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Месечен</span>
+                <span className="sm:hidden">Мес</span>
               </TabsTrigger>
-              <TabsTrigger value="yearly">
-                <Star className="w-4 h-4 mr-2" />
-                Годишен
+              <TabsTrigger value="yearly" className="text-xs sm:text-sm">
+                <Star className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Годишен</span>
+                <span className="sm:hidden">Год</span>
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="daily" className="mt-6">
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">Дневен хороскоп за {profile.zodiac_sign}</h3>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-semibold">Дневен хороскоп за {profile.zodiac_sign}</h3>
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -136,8 +140,8 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
 
             <TabsContent value="weekly" className="mt-6">
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">Седмичен хороскоп за {profile.zodiac_sign}</h3>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-semibold">Седмичен хороскоп за {profile.zodiac_sign}</h3>
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -163,8 +167,8 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
 
             <TabsContent value="monthly" className="mt-6">
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">Месечен хороскоп за {profile.zodiac_sign}</h3>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-semibold">Месечен хороскоп за {profile.zodiac_sign}</h3>
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -190,8 +194,8 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
 
             <TabsContent value="yearly" className="mt-6">
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">Годишен хороскоп за {profile.zodiac_sign}</h3>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-semibold">Годишен хороскоп за {profile.zodiac_sign}</h3>
                   <Button 
                     variant="outline" 
                     size="sm"

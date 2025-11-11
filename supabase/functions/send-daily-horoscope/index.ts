@@ -8,7 +8,7 @@ const sendResendEmail = async (to: string, subject: string, html: string) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "AstroInsight <noreply@eclyptica.com>",
+      from: "Eclyptica <noreply@eclyptica.com>",
       to: [to],
       subject,
       html,
@@ -203,7 +203,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
                 </div>
                 
                 <div class="footer">
-                  <p>© 2025 AstroInsight. Всички права запазени.</p>
+                  <p>© 2025 Eclyptica. Всички права запазени.</p>
                   <p>Ако не искате да получавате дневни хороскопи, можете да промените настройките си в профила.</p>
                 </div>
               </body>

@@ -4,8 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles, LogOut, User as UserIcon, Settings } from "lucide-react";
+import { Sparkles, LogOut, User as UserIcon, Settings, Menu, X } from "lucide-react";
 import { User } from "@supabase/supabase-js";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ProfileSetup from "@/components/ProfileSetup";
 import HoroscopeDisplay from "@/components/HoroscopeDisplay";
 
@@ -16,6 +17,7 @@ const Dashboard = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -88,13 +90,15 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-cosmic">
-      <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm">
+      <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-primary" />
             <span className="text-xl font-bold">Eclyptica</span>
           </div>
-          <div className="flex items-center gap-4">
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm">
               <UserIcon className="w-4 h-4" />
               <span className="text-muted-foreground">{user?.email}</span>
@@ -104,6 +108,34 @@ const Dashboard = () => {
               Изход
             </Button>
           </div>
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="w-5 h-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px]">
+              <div className="flex flex-col gap-6 mt-8">
+                <div className="flex items-center gap-2 text-sm border-b border-border pb-4">
+                  <UserIcon className="w-4 h-4" />
+                  <span className="text-muted-foreground text-xs break-all">{user?.email}</span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start" 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleSignOut();
+                  }}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Изход
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
