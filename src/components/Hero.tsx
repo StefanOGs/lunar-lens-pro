@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-cosmic.jpg";
 import logo from "@/assets/logo.png";
@@ -6,6 +7,24 @@ import logo from "@/assets/logo.png";
 export const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Navigation */}
+      <nav className="absolute top-0 left-0 right-0 z-20 border-b border-border/50 bg-card/30 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
+            <span className="text-xl font-bold">Eclyptica</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/about">За нас</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/auth">Вход</Link>
+            </Button>
+          </div>
+        </div>
+      </nav>
+
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImage})` }}
@@ -15,10 +34,6 @@ export const Hero = () => {
       
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
-            <span className="text-2xl font-bold">Eclyptica</span>
-          </div>
           
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30">
             <Sparkles className="w-4 h-4 text-secondary" />

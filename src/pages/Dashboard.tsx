@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles, LogOut, User as UserIcon, Settings, Menu, X } from "lucide-react";
+import { Sparkles, LogOut, User as UserIcon, Settings, Menu, Home, Star, Heart, Moon, Crown } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ProfileSetup from "@/components/ProfileSetup";
 import HoroscopeDisplay from "@/components/HoroscopeDisplay";
 import logo from "@/assets/logo.png";
@@ -19,6 +20,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState("");
 
   useEffect(() => {
     checkUser();
@@ -78,6 +81,17 @@ const Dashboard = () => {
     }
   };
 
+  const handleServiceClick = (serviceName: string) => {
+    setSelectedService(serviceName);
+    setUpgradeDialogOpen(true);
+  };
+
+  const handleUpgradeClick = () => {
+    setUpgradeDialogOpen(false);
+    // Navigate to subscriptions section or page
+    document.getElementById('subscriptions')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-cosmic">
@@ -93,9 +107,22 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-cosmic">
       <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
-            <span className="text-xl font-bold">Eclyptica</span>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
+              <span className="text-xl font-bold">Eclyptica</span>
+            </Link>
+            <Button variant="ghost" size="sm" asChild className="hidden md:flex">
+              <Link to="/">
+                <Home className="w-4 h-4 mr-2" />
+                Начало
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild className="hidden md:flex">
+              <Link to="/about">
+                За нас
+              </Link>
+            </Button>
           </div>
           
           {/* Desktop Menu */}
@@ -177,7 +204,73 @@ const Dashboard = () => {
             </Card>
           </div>
         ) : (
-          <div>
+          <div className="space-y-8">
+            {/* Navigation Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <Card className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    Персонализирани хороскопи
+                  </CardTitle>
+                  <CardDescription>Вашите дневни, седмични и месечни хороскопи</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card 
+                className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => handleServiceClick("Натална карта")}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="w-5 h-5 text-primary" />
+                    Натална карта
+                  </CardTitle>
+                  <CardDescription>Пълен астрологичен анализ на вашето раждане</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card 
+                className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => handleServiceClick("Съвместимост")}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-primary" />
+                    Съвместимост
+                  </CardTitle>
+                  <CardDescription>Анализ на астрологичната съвместимост</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card 
+                className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => handleServiceClick("Лунен календар")}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Moon className="w-5 h-5 text-primary" />
+                    Лунен календар
+                  </CardTitle>
+                  <CardDescription>Следете лунните фази и влиянието им</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card 
+                className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer"
+                id="subscriptions"
+                onClick={() => handleServiceClick("Абонаменти")}
+              >
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-primary" />
+                    Абонаменти
+                  </CardTitle>
+                  <CardDescription>Разгледайте нашите планове и услуги</CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+
             <div className="flex justify-end mb-4">
               <Button 
                 variant="outline" 
@@ -192,6 +285,26 @@ const Dashboard = () => {
           </div>
         )}
       </main>
+
+      {/* Upgrade Dialog */}
+      <Dialog open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Премиум услуга</DialogTitle>
+            <DialogDescription>
+              Тази услуга е достъпна само за потребители с по-висок абонаментен план. Желаете ли да надградите своя план?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setUpgradeDialogOpen(false)}>
+              Отказ
+            </Button>
+            <Button onClick={handleUpgradeClick}>
+              Да, покажи планове
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
