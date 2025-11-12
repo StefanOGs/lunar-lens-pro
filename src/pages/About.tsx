@@ -1,29 +1,57 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Sparkles } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
+import Layout from "@/components/Layout";
 
 const About = () => {
-  return (
-    <div className="min-h-screen bg-gradient-cosmic">
-      <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
-            <span className="text-xl font-bold">Eclyptica</span>
-          </Link>
-          
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Начало
-            </Link>
-          </Button>
-        </div>
-      </header>
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-      <main className="container mx-auto px-4 py-12">
+  useEffect(() => {
+    checkUser();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      navigate("/auth");
+      return;
+    }
+    
+    setUser(session.user);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-cosmic">
+        <div className="text-center">
+          <Sparkles className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
+          <p className="text-muted-foreground">Зареждане...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Layout user={user}>
+      <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <div className="w-20 h-20 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto">
@@ -93,14 +121,14 @@ const About = () => {
 
           <div className="text-center pt-8">
             <Button size="lg" asChild>
-              <Link to="/dashboard">
+              <Link to="/home">
                 Започнете вашето пътешествие
               </Link>
             </Button>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </Layout>
   );
 };
 

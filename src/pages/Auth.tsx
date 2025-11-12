@@ -21,7 +21,7 @@ const Auth = () => {
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate("/dashboard");
+        navigate("/home");
       }
     });
   }, [navigate]);
@@ -35,7 +35,7 @@ const Auth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/home`,
           data: {
             full_name: fullName
           }
@@ -88,7 +88,7 @@ const Auth = () => {
 
       if (error) throw error;
 
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error: any) {
       toast({
         title: "Грешка при вход",
