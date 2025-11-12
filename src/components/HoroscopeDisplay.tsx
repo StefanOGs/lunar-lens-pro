@@ -88,23 +88,23 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-2">
-              <TabsTrigger value="daily" className="text-sm sm:text-base py-3">
+            <TabsList className="flex flex-wrap justify-center gap-3 p-3 h-auto">
+              <TabsTrigger value="daily" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
                 <Calendar className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Дневен</span>
                 <span className="sm:hidden">Ден</span>
               </TabsTrigger>
-              <TabsTrigger value="weekly" className="text-sm sm:text-base py-3">
+              <TabsTrigger value="weekly" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
                 <TrendingUp className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Седмичен</span>
                 <span className="sm:hidden">Седм</span>
               </TabsTrigger>
-              <TabsTrigger value="monthly" className="text-sm sm:text-base py-3">
+              <TabsTrigger value="monthly" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
                 <Star className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Месечен</span>
                 <span className="sm:hidden">Мес</span>
               </TabsTrigger>
-              <TabsTrigger value="yearly" className="text-sm sm:text-base py-3">
+              <TabsTrigger value="yearly" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
                 <Star className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Годишен</span>
                 <span className="sm:hidden">Год</span>
