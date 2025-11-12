@@ -9,6 +9,7 @@ import { User } from "@supabase/supabase-js";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ProfileSetup from "@/components/ProfileSetup";
 import HoroscopeDisplay from "@/components/HoroscopeDisplay";
+import logo from "@/assets/logo.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const Dashboard = () => {
       <header className="border-b border-border/50 bg-card/30 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-primary" />
+            <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
             <span className="text-xl font-bold">Eclyptica</span>
           </div>
           

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-cosmic.jpg";
+import logo from "@/assets/logo.png";
 
 export const Hero = () => {
   return (
@@ -14,6 +15,11 @@ export const Hero = () => {
       
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <img src={logo} alt="Eclyptica Logo" className="h-10 w-auto" />
+            <span className="text-2xl font-bold">Eclyptica</span>
+          </div>
+          
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30">
             <Sparkles className="w-4 h-4 text-secondary" />
             <span className="text-sm text-foreground">Вашият път сред звездите</span>
