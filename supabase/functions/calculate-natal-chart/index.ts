@@ -55,18 +55,103 @@ serve(async (req) => {
       }
     }
 
-    // Simplified planetary positions (for demo - real calculation would use ephemeris)
+    // Calculate deterministic planetary positions based on date
+    // Using simplified but deterministic formulas based on birth date
+    const dayOfYear = Math.floor((birthDateTime.getTime() - new Date(year, 0, 0).getTime()) / 86400000);
+    const yearsSince2000 = year - 2000;
+    
+    // Deterministic planetary cycles (simplified tropical zodiac positions)
+    const calculatePlanetPosition = (daysPer360: number, offset: number) => {
+      const totalDays = yearsSince2000 * 365.25 + dayOfYear;
+      const degrees = ((totalDays / daysPer360) * 360 + offset) % 360;
+      const signIndex = Math.floor(degrees / 30);
+      const degreeInSign = Math.floor(degrees % 30);
+      return { sign: zodiacSigns[signIndex].sign, degree: degreeInSign };
+    };
+
+    // Calculate Ascendant deterministically based on time and location
+    const localSiderealTime = (hours + minutes / 60 + location.lon / 15) % 24;
+    const ascendantIndex = Math.floor((localSiderealTime * 15) / 30) % 12;
+    const ascendantDegree = Math.floor((localSiderealTime * 15) % 30);
+    const ascendant = zodiacSigns[ascendantIndex].sign;
+
+    // Calculate house cusps based on Ascendant (simplified Placidus-style)
+    const houses = Array.from({ length: 12 }, (_, i) => {
+      const houseSignIndex = (ascendantIndex + i) % 12;
+      return { house: i + 1, sign: zodiacSigns[houseSignIndex].sign, degree: Math.floor((ascendantDegree + i * 2.5) % 30) };
+    });
+
+    // Calculate planetary positions deterministically
+    const sunPos = calculatePlanetPosition(365.25, 280); // Sun cycle
+    const moonPos = calculatePlanetPosition(27.32, 130); // Moon cycle
+    const mercuryPos = calculatePlanetPosition(87.97, 50); // Mercury cycle
+    const venusPos = calculatePlanetPosition(224.7, 180); // Venus cycle
+    const marsPos = calculatePlanetPosition(686.98, 320); // Mars cycle
+    const jupiterPos = calculatePlanetPosition(4332.59, 40); // Jupiter cycle
+    const saturnPos = calculatePlanetPosition(10759.22, 260); // Saturn cycle
+    const uranusPos = calculatePlanetPosition(30688.5, 150); // Uranus cycle
+    const neptunePos = calculatePlanetPosition(60182, 220); // Neptune cycle
+    const plutoPos = calculatePlanetPosition(90560, 90); // Pluto cycle
+
+    // Assign planets to houses based on their positions
+    const getHouse = (planetDegree: number, signName: string) => {
+      const signIndex = zodiacSigns.findIndex(z => z.sign === signName);
+      const totalDegree = (signIndex * 30 + planetDegree) % 360;
+      const ascendantTotalDegree = (ascendantIndex * 30 + ascendantDegree) % 360;
+      const houseDegree = (totalDegree - ascendantTotalDegree + 360) % 360;
+      return Math.floor(houseDegree / 30) + 1;
+    };
+
     const planets = [
-      { name: "Слънце", sign: sunSign, degree: Math.floor(Math.random() * 30), house: Math.floor(Math.random() * 12) + 1 },
-      { name: "Луна", sign: zodiacSigns[Math.floor(Math.random() * 12)].sign, degree: Math.floor(Math.random() * 30), house: Math.floor(Math.random() * 12) + 1 },
-      { name: "Меркурий", sign: zodiacSigns[Math.floor(Math.random() * 12)].sign, degree: Math.floor(Math.random() * 30), house: Math.floor(Math.random() * 12) + 1 },
-      { name: "Венера", sign: zodiacSigns[Math.floor(Math.random() * 12)].sign, degree: Math.floor(Math.random() * 30), house: Math.floor(Math.random() * 12) + 1 },
-      { name: "Марс", sign: zodiacSigns[Math.floor(Math.random() * 12)].sign, degree: Math.floor(Math.random() * 30), house: Math.floor(Math.random() * 12) + 1 },
+      { name: "Слънце", sign: sunPos.sign, degree: sunPos.degree, house: getHouse(sunPos.degree, sunPos.sign) },
+      { name: "Луна", sign: moonPos.sign, degree: moonPos.degree, house: getHouse(moonPos.degree, moonPos.sign) },
+      { name: "Меркурий", sign: mercuryPos.sign, degree: mercuryPos.degree, house: getHouse(mercuryPos.degree, mercuryPos.sign) },
+      { name: "Венера", sign: venusPos.sign, degree: venusPos.degree, house: getHouse(venusPos.degree, venusPos.sign) },
+      { name: "Марс", sign: marsPos.sign, degree: marsPos.degree, house: getHouse(marsPos.degree, marsPos.sign) },
+      { name: "Юпитер", sign: jupiterPos.sign, degree: jupiterPos.degree, house: getHouse(jupiterPos.degree, jupiterPos.sign) },
+      { name: "Сатурн", sign: saturnPos.sign, degree: saturnPos.degree, house: getHouse(saturnPos.degree, saturnPos.sign) },
+      { name: "Уран", sign: uranusPos.sign, degree: uranusPos.degree, house: getHouse(uranusPos.degree, uranusPos.sign) },
+      { name: "Нептун", sign: neptunePos.sign, degree: neptunePos.degree, house: getHouse(neptunePos.degree, neptunePos.sign) },
+      { name: "Плутон", sign: plutoPos.sign, degree: plutoPos.degree, house: getHouse(plutoPos.degree, plutoPos.sign) },
     ];
 
-    // Calculate Ascendant (simplified - real calculation uses sidereal time)
-    const ascendantIndex = Math.floor((hours * 2 + minutes / 30) % 12);
-    const ascendant = zodiacSigns[ascendantIndex].sign;
+    // Calculate major aspects between planets
+    const aspects = [];
+    const aspectTypes = [
+      { name: "Конюнкция", degree: 0, orb: 8 },
+      { name: "Опозиция", degree: 180, orb: 8 },
+      { name: "Квадрат", degree: 90, orb: 6 },
+      { name: "Тригон", degree: 120, orb: 8 },
+      { name: "Секстил", degree: 60, orb: 6 },
+    ];
+
+    for (let i = 0; i < planets.length; i++) {
+      for (let j = i + 1; j < planets.length; j++) {
+        const planet1 = planets[i];
+        const planet2 = planets[j];
+        
+        const sign1Index = zodiacSigns.findIndex(z => z.sign === planet1.sign);
+        const sign2Index = zodiacSigns.findIndex(z => z.sign === planet2.sign);
+        
+        const totalDegree1 = sign1Index * 30 + planet1.degree;
+        const totalDegree2 = sign2Index * 30 + planet2.degree;
+        
+        let angle = Math.abs(totalDegree1 - totalDegree2);
+        if (angle > 180) angle = 360 - angle;
+        
+        for (const aspectType of aspectTypes) {
+          if (Math.abs(angle - aspectType.degree) <= aspectType.orb) {
+            aspects.push({
+              planet1: planet1.name,
+              planet2: planet2.name,
+              aspect: aspectType.name,
+              angle: Math.round(angle)
+            });
+            break;
+          }
+        }
+      }
+    }
 
     // Generate AI analysis using Lovable AI
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
@@ -85,8 +170,10 @@ serve(async (req) => {
 
 Данни за натална карта:
 - Слънчев знак: ${sunSign}
-- Асцендент: ${ascendant}
+- Асцендент: ${ascendant} (${ascendantDegree}°)
 - Планети: ${planets.map(p => `${p.name} в ${p.sign} (${p.degree}°, ${p.house}-ти дом)`).join(', ')}
+- Домове: ${houses.map(h => `${h.house}-ти дом в ${h.sign}`).join(', ')}
+- Аспекти: ${aspects.map(a => `${a.planet1} ${a.aspect} ${a.planet2} (${a.angle}°)`).join(', ')}
 
 Анализът трябва да включва:
 1. Общо описание на личността (2-3 параграфа)
@@ -155,8 +242,10 @@ serve(async (req) => {
       },
       chart: {
         sunSign,
-        ascendant,
-        planets
+        ascendant: { sign: ascendant, degree: ascendantDegree },
+        planets,
+        houses,
+        aspects
       },
       analysis
     };

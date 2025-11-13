@@ -12,12 +12,23 @@ interface NatalChartData {
   };
   chart: {
     sunSign: string;
-    ascendant: string;
+    ascendant: { sign: string; degree: number };
     planets: Array<{
       name: string;
       sign: string;
       degree: number;
       house: number;
+    }>;
+    houses: Array<{
+      house: number;
+      sign: string;
+      degree: number;
+    }>;
+    aspects: Array<{
+      planet1: string;
+      planet2: string;
+      aspect: string;
+      angle: number;
     }>;
   };
   analysis: string;
@@ -69,7 +80,8 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold">{data.chart.ascendant}</p>
+                  <p className="text-2xl font-bold">{data.chart.ascendant.sign}</p>
+                  <p className="text-sm text-muted-foreground">{data.chart.ascendant.degree}°</p>
                 </CardContent>
               </Card>
             </div>
@@ -94,6 +106,52 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
                       <div className="text-sm text-muted-foreground">
                         {planet.sign} {planet.degree}° • {planet.house}-ти дом
                       </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Houses */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-primary" />
+                  <CardTitle>Астрологични Домове</CardTitle>
+                </div>
+                <CardDescription>Позициите на 12-те астрологични дома</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {data.chart.houses.map((house) => (
+                    <div key={house.house} className="p-3 bg-muted/50 rounded-lg">
+                      <div className="font-medium">{house.house}-ти дом</div>
+                      <div className="text-sm text-muted-foreground">
+                        {house.sign} {house.degree}°
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Aspects */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  <CardTitle>Планетарни Аспекти</CardTitle>
+                </div>
+                <CardDescription>Важни ъглови връзки между планетите</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-2">
+                  {data.chart.aspects.map((aspect, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-2 bg-muted/30 rounded">
+                      <span className="text-sm">
+                        {aspect.planet1} {aspect.aspect} {aspect.planet2}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{aspect.angle}°</span>
                     </div>
                   ))}
                 </div>
