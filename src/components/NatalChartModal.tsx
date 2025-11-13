@@ -97,7 +97,7 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-3">
-                  {data.chart.planets.map((planet, idx) => (
+                  {data.chart.planets?.length > 0 ? data.chart.planets.map((planet, idx) => (
                     <div key={idx} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className="flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-primary" />
@@ -107,7 +107,7 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
                         {planet.sign} {planet.degree}° • {planet.house}-ти дом
                       </div>
                     </div>
-                  ))}
+                  )) : <p className="text-muted-foreground">Няма данни за планети</p>}
                 </div>
               </CardContent>
             </Card>
@@ -123,14 +123,14 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {data.chart.houses.map((house) => (
+                  {data.chart.houses?.length > 0 ? data.chart.houses.map((house) => (
                     <div key={house.house} className="p-3 bg-muted/50 rounded-lg">
                       <div className="font-medium">{house.house}-ти дом</div>
                       <div className="text-sm text-muted-foreground">
                         {house.sign} {house.degree}°
                       </div>
                     </div>
-                  ))}
+                  )) : <p className="text-muted-foreground col-span-full">Няма данни за домове</p>}
                 </div>
               </CardContent>
             </Card>
@@ -146,14 +146,14 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-2">
-                  {data.chart.aspects.map((aspect, idx) => (
+                  {data.chart.aspects?.length > 0 ? data.chart.aspects.map((aspect, idx) => (
                     <div key={idx} className="flex items-center justify-between p-2 bg-muted/30 rounded">
                       <span className="text-sm">
                         {aspect.planet1} {aspect.aspect} {aspect.planet2}
                       </span>
                       <span className="text-xs text-muted-foreground">{aspect.angle}°</span>
                     </div>
-                  ))}
+                  )) : <p className="text-muted-foreground">Няма данни за аспекти</p>}
                 </div>
               </CardContent>
             </Card>

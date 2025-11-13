@@ -64,21 +64,24 @@ serve(async (req) => {
     const calculatePlanetPosition = (daysPer360: number, offset: number) => {
       const totalDays = yearsSince2000 * 365.25 + dayOfYear;
       const degrees = ((totalDays / daysPer360) * 360 + offset) % 360;
-      const signIndex = Math.floor(degrees / 30);
+      let signIndex = Math.floor(degrees / 30) % 12;
+      if (signIndex < 0) signIndex += 12;
       const degreeInSign = Math.floor(degrees % 30);
       return { sign: zodiacSigns[signIndex].sign, degree: degreeInSign };
     };
 
     // Calculate Ascendant deterministically based on time and location
     const localSiderealTime = (hours + minutes / 60 + location.lon / 15) % 24;
-    const ascendantIndex = Math.floor((localSiderealTime * 15) / 30) % 12;
+    let ascendantIndex = Math.floor((localSiderealTime * 15) / 30) % 12;
+    if (ascendantIndex < 0) ascendantIndex += 12;
     const ascendantDegree = Math.floor((localSiderealTime * 15) % 30);
-    const ascendant = zodiacSigns[ascendantIndex].sign;
+    const ascendant = zodiacSigns[ascendantIndex]?.sign || "Неизвестен";
 
     // Calculate house cusps based on Ascendant (simplified Placidus-style)
     const houses = Array.from({ length: 12 }, (_, i) => {
-      const houseSignIndex = (ascendantIndex + i) % 12;
-      return { house: i + 1, sign: zodiacSigns[houseSignIndex].sign, degree: Math.floor((ascendantDegree + i * 2.5) % 30) };
+      let houseSignIndex = (ascendantIndex + i) % 12;
+      if (houseSignIndex < 0) houseSignIndex += 12;
+      return { house: i + 1, sign: zodiacSigns[houseSignIndex]?.sign || "Неизвестен", degree: Math.floor((ascendantDegree + i * 2.5) % 30) };
     });
 
     // Calculate planetary positions deterministically
