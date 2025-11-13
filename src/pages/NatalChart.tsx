@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar, Clock, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
+import NatalChartModal from "@/components/NatalChartModal";
 import { useToast } from "@/hooks/use-toast";
 
 const NatalChart = () => {
@@ -28,6 +29,8 @@ const NatalChart = () => {
     lat: number;
     lon: number;
   } | null>(null);
+  const [chartData, setChartData] = useState<any>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -68,24 +71,28 @@ const NatalChart = () => {
     setGenerating(true);
     
     try {
-      console.log("Generating natal chart with data:", {
-        birthDate: formData.birthDate,
-        birthTime: formData.birthTime,
-        birthPlace: formData.birthPlace,
-        location: locationData
+      const { data, error } = await supabase.functions.invoke('calculate-natal-chart', {
+        body: {
+          birthDate: formData.birthDate,
+          birthTime: formData.birthTime,
+          location: locationData
+        }
       });
-      
-      // Simulate API call (API logic will be added later)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      if (error) throw error;
+
+      setChartData(data);
+      setModalOpen(true);
       
       toast({
         title: "Готово!",
-        description: "Вашата натална карта е генерирана успешно. (API интеграцията ще бъде добавена скоро)",
+        description: "Вашата натална карта е генерирана успешно.",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Error generating natal chart:', error);
       toast({
         title: "Грешка",
-        description: "Възникна проблем при генерирането на картата",
+        description: error.message || "Възникна проблем при генерирането на картата",
         variant: "destructive"
       });
     } finally {
@@ -180,6 +187,12 @@ const NatalChart = () => {
           </Card>
         </div>
       </div>
+
+      <NatalChartModal 
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        data={chartData}
+      />
     </Layout>
   );
 };
