@@ -68,12 +68,25 @@ const NatalChart = () => {
       return;
     }
 
+    // Validate and convert European date format (DD/MM/YYYY) to ISO format (YYYY-MM-DD)
+    const dateParts = formData.birthDate.split('/');
+    if (dateParts.length !== 3) {
+      toast({
+        title: "Невалидна дата",
+        description: "Моля въведете дата в формат ДД/ММ/ГГГГ",
+        variant: "destructive"
+      });
+      return;
+    }
+    const [day, month, year] = dateParts;
+    const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
     setGenerating(true);
     
     try {
       const { data, error } = await supabase.functions.invoke('calculate-natal-chart', {
         body: {
-          birthDate: formData.birthDate,
+          birthDate: isoDate,
           birthTime: formData.birthTime,
           location: locationData
         }
@@ -139,13 +152,24 @@ const NatalChart = () => {
                 <div className="space-y-2">
                   <Label htmlFor="birthDate" className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    Дата на раждане
+                    Дата на раждане (ДД/ММ/ГГГГ)
                   </Label>
                   <Input
                     id="birthDate"
-                    type="date"
+                    type="text"
+                    placeholder="31/12/1990"
                     value={formData.birthDate}
-                    onChange={(e) => setFormData(prev => ({ ...prev, birthDate: e.target.value }))}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/[^\d/]/g, '');
+                      if (value.length >= 2 && value[2] !== '/') {
+                        value = value.slice(0, 2) + '/' + value.slice(2);
+                      }
+                      if (value.length >= 5 && value[5] !== '/') {
+                        value = value.slice(0, 5) + '/' + value.slice(5);
+                      }
+                      if (value.length > 10) value = value.slice(0, 10);
+                      setFormData(prev => ({ ...prev, birthDate: value }));
+                    }}
                     required
                   />
                 </div>
