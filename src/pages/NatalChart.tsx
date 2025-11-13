@@ -9,11 +9,14 @@ import { Label } from "@/components/ui/label";
 import { Calendar, Clock, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
+import { useToast } from "@/hooks/use-toast";
 
 const NatalChart = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
   const [formData, setFormData] = useState({
     birthDate: "",
     birthTime: "",
@@ -52,14 +55,42 @@ const NatalChart = () => {
     setLoading(false);
   };
 
-  const generateNatalChart = () => {
-    console.log("Generating natal chart with data:", {
-      birthDate: formData.birthDate,
-      birthTime: formData.birthTime,
-      birthPlace: formData.birthPlace,
-      location: locationData
-    });
-    // API logic will be added later
+  const generateNatalChart = async () => {
+    if (!locationData) {
+      toast({
+        title: "Моля изберете локация",
+        description: "Изберете населено място от предложените опции за точни координати",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setGenerating(true);
+    
+    try {
+      console.log("Generating natal chart with data:", {
+        birthDate: formData.birthDate,
+        birthTime: formData.birthTime,
+        birthPlace: formData.birthPlace,
+        location: locationData
+      });
+      
+      // Simulate API call (API logic will be added later)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Готово!",
+        description: "Вашата натална карта е генерирана успешно. (API интеграцията ще бъде добавена скоро)",
+      });
+    } catch (error) {
+      toast({
+        title: "Грешка",
+        description: "Възникна проблем при генерирането на картата",
+        variant: "destructive"
+      });
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const handleLocationSelect = (location: { city: string; country: string; lat: number; lon: number; displayName: string }) => {
@@ -134,8 +165,15 @@ const NatalChart = () => {
                   placeholder="Въведете град или населено място"
                 />
 
-                <Button type="submit" className="w-full">
-                  Генерирай карта
+                <Button type="submit" className="w-full" disabled={generating}>
+                  {generating ? (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                      Генериране...
+                    </>
+                  ) : (
+                    "Генерирай карта"
+                  )}
                 </Button>
               </form>
             </CardContent>
