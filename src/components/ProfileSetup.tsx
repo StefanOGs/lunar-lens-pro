@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar, Clock } from "lucide-react";
+import LocationAutocomplete from "@/components/LocationAutocomplete";
 
 const zodiacSigns = [
   { value: "Овен", label: "Овен (21 март - 19 април)", startMonth: 3, startDay: 21, endMonth: 4, endDay: 19 },
@@ -63,6 +64,12 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
     birthPlace: existingProfile?.birth_place || "",
     zodiacSign: existingProfile?.zodiac_sign || "",
   });
+  const [locationData, setLocationData] = useState<{
+    city: string;
+    country: string;
+    lat: number;
+    lon: number;
+  } | null>(null);
 
   useEffect(() => {
     if (formData.birthDate) {
@@ -168,15 +175,20 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="birthPlace">Място на раждане (незадължително)</Label>
-        <Input
-          id="birthPlace"
-          placeholder="София, България"
-          value={formData.birthPlace}
-          onChange={(e) => setFormData({ ...formData, birthPlace: e.target.value })}
-        />
-      </div>
+      <LocationAutocomplete
+        value={formData.birthPlace}
+        onChange={(value) => setFormData({ ...formData, birthPlace: value })}
+        onLocationSelect={(location) => {
+          setLocationData({
+            city: location.city,
+            country: location.country,
+            lat: location.lat,
+            lon: location.lon
+          });
+        }}
+        label="Място на раждане (незадължително)"
+        placeholder="София, България"
+      />
 
       <div className="space-y-2">
         <Label htmlFor="zodiacSign">Зодия (автоматично)</Label>

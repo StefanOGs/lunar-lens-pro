@@ -42,8 +42,12 @@ const Services = () => {
   };
 
   const handleServiceClick = (serviceName: string) => {
-    setSelectedService(serviceName);
-    setUpgradeDialogOpen(true);
+    if (serviceName === "Натална карта") {
+      navigate("/natal-chart");
+    } else {
+      setSelectedService(serviceName);
+      setUpgradeDialogOpen(true);
+    }
   };
 
   if (loading) {

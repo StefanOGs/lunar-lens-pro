@@ -11,6 +11,7 @@ import Services from "./pages/Services";
 import EditProfile from "./pages/EditProfile";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
+import NatalChart from "./pages/NatalChart";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/home" element={<Home />} />
           <Route path="/horoscopes" element={<Horoscopes />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/natal-chart" element={<NatalChart />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
