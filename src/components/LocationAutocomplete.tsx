@@ -56,10 +56,22 @@ const LocationAutocomplete = ({
     debounceRef.current = setTimeout(async () => {
       setIsLoading(true);
       try {
-        const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
         const response = await fetch(
-          `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(value)}&type=city&format=json&apiKey=${apiKey}`
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/geocode-location`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({ query: value })
+          }
         );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch locations');
+        }
+        
         const data = await response.json();
         setSuggestions(data.results || []);
         setShowSuggestions(true);
