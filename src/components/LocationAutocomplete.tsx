@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MapPin } from "lucide-react";
@@ -56,24 +57,11 @@ const LocationAutocomplete = ({
     debounceRef.current = setTimeout(async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/geocode-location`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-            },
-            body: JSON.stringify({ query: value })
-          }
-        );
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch locations');
-        }
-        
-        const data = await response.json();
-        setSuggestions(data.results || []);
+        const { data, error } = await supabase.functions.invoke('geocode-location', {
+          body: { query: value }
+        });
+        if (error) throw error;
+        setSuggestions((data as any)?.results || []);
         setShowSuggestions(true);
       } catch (error) {
         console.error("Error fetching location suggestions:", error);
