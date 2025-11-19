@@ -100,7 +100,7 @@ serve(async (req) => {
     }
 
     const planetsData = await planetsResponse.json();
-    console.log('Planets data received');
+    console.log('Planets data received:', JSON.stringify(planetsData, null, 2));
 
     // Fetch house cusps data
     console.log('Fetching house cusps from AstrologyAPI...');
@@ -126,7 +126,7 @@ serve(async (req) => {
     }
 
     const housesData = await housesResponse.json();
-    console.log('Houses data received');
+    console.log('Houses data received:', JSON.stringify(housesData, null, 2));
 
     // Map zodiac signs from English to Bulgarian
     const zodiacMap: { [key: string]: string } = {
