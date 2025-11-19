@@ -17,6 +17,8 @@ export type Database = {
       profiles: {
         Row: {
           birth_date: string
+          birth_lat: number | null
+          birth_lon: number | null
           birth_place: string | null
           birth_time: string | null
           created_at: string
@@ -28,6 +30,8 @@ export type Database = {
         }
         Insert: {
           birth_date: string
+          birth_lat?: number | null
+          birth_lon?: number | null
           birth_place?: string | null
           birth_time?: string | null
           created_at?: string
@@ -39,6 +43,8 @@ export type Database = {
         }
         Update: {
           birth_date?: string
+          birth_lat?: number | null
+          birth_lon?: number | null
           birth_place?: string | null
           birth_time?: string | null
           created_at?: string
