@@ -73,15 +73,12 @@ serve(async (req) => {
       tzone
     };
 
-    // Create Basic Auth header
-    const auth = `Basic ${btoa(`${ASTROLOGY_API_USER_ID}:${ASTROLOGY_API_KEY}`)}`;
-
-    // Fetch planets data
-    console.log('Fetching planets from AstrologyAPI...');
-    const planetsResponse = await fetch('https://json.astrologyapi.com/v1/planets/tropical', {
+    // Fetch planets data from FreeAstrologyAPI
+    console.log('Fetching planets from FreeAstrologyAPI...');
+    const planetsResponse = await fetch('https://json.freeastrologyapi.com/western/planets', {
       method: 'POST',
       headers: {
-        'Authorization': auth,
+        'x-api-key': ASTROLOGY_API_KEY,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(apiData)
@@ -102,12 +99,12 @@ serve(async (req) => {
     const planetsData = await planetsResponse.json();
     console.log('Planets data received:', JSON.stringify(planetsData, null, 2));
 
-    // Fetch house cusps data
-    console.log('Fetching house cusps from AstrologyAPI...');
-    const housesResponse = await fetch('https://json.astrologyapi.com/v1/house_cusps_report/tropical', {
+    // Fetch house cusps data from FreeAstrologyAPI
+    console.log('Fetching house cusps from FreeAstrologyAPI...');
+    const housesResponse = await fetch('https://json.freeastrologyapi.com/western/houses', {
       method: 'POST',
       headers: {
-        'Authorization': auth,
+        'x-api-key': ASTROLOGY_API_KEY,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(apiData)
@@ -158,8 +155,10 @@ serve(async (req) => {
       'Pluto': 'Плутон'
     };
 
-    // Transform planets data to our format
-    const planets = planetsData.map((planet: any) => ({
+    // Transform planets data to our format (FreeAstrologyAPI returns object with output property)
+    const planetsObj = planetsData.output || planetsData;
+    const planetsArray = Object.values(planetsObj);
+    const planets = planetsArray.map((planet: any) => ({
       name: planetMap[planet.name] || planet.name,
       sign: zodiacMap[planet.sign] || planet.sign,
       degree: Math.floor(planet.normDegree % 30),
@@ -170,12 +169,14 @@ serve(async (req) => {
     const sunPlanet = planets.find((p: any) => p.name === 'Слънце');
     const sunSign = sunPlanet ? sunPlanet.sign : 'Неизвестен';
 
-    // Get Ascendant from houses data
-    const ascendantSign = housesData[0] ? (zodiacMap[housesData[0].sign] || housesData[0].sign) : 'Неизвестен';
-    const ascendantDegree = housesData[0] ? Math.floor(housesData[0].signLord % 30) : 0;
+    // Get Ascendant from houses data (FreeAstrologyAPI returns object with output property)
+    const housesObj = housesData.output || housesData;
+    const housesArray = Object.values(housesObj);
+    const ascendantSign = housesArray[0] ? (zodiacMap[(housesArray[0] as any).sign] || (housesArray[0] as any).sign) : 'Неизвестен';
+    const ascendantDegree = housesArray[0] ? Math.floor((housesArray[0] as any).signLord % 30) : 0;
 
     // Transform houses data to our format
-    const houses = housesData.map((house: any, index: number) => ({
+    const houses = housesArray.map((house: any, index: number) => ({
       house: index + 1,
       sign: zodiacMap[house.sign] || house.sign,
       degree: Math.floor(house.signLord % 30)
