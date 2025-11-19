@@ -40,6 +40,7 @@ const NatalChart = () => {
         navigate("/auth");
       } else {
         setUser(session.user);
+        loadUserProfile(session.user.id);
       }
     });
 
@@ -55,7 +56,64 @@ const NatalChart = () => {
     }
     
     setUser(session.user);
+    await loadUserProfile(session.user.id);
     setLoading(false);
+  };
+
+  const loadUserProfile = async (userId: string) => {
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (profile) {
+        // Convert ISO date (YYYY-MM-DD) to European format (DD/MM/YYYY)
+        const dateObj = new Date(profile.birth_date);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        const europeanDate = `${day}/${month}/${year}`;
+
+        setFormData({
+          birthDate: europeanDate,
+          birthTime: profile.birth_time || "",
+          birthPlace: profile.birth_place || "",
+        });
+
+        // Geocode the birth place to get coordinates
+        if (profile.birth_place) {
+          try {
+            const { data: geoData, error: geoError } = await supabase.functions.invoke('geocode-location', {
+              body: { query: profile.birth_place }
+            });
+
+            if (!geoError && geoData && geoData.length > 0) {
+              const location = geoData[0];
+              setLocationData({
+                city: location.city || location.displayName,
+                country: location.country,
+                lat: location.lat,
+                lon: location.lon
+              });
+            }
+          } catch (geoError) {
+            console.error('Error geocoding location:', geoError);
+            // Continue even if geocoding fails - user can still see the form
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error('Error loading profile:', error);
+      toast({
+        title: "Грешка",
+        description: "Не успяхме да заредим вашия профил",
+        variant: "destructive"
+      });
+    }
   };
 
   const generateNatalChart = async () => {
@@ -170,6 +228,8 @@ const NatalChart = () => {
                       if (value.length > 10) value = value.slice(0, 10);
                       setFormData(prev => ({ ...prev, birthDate: value }));
                     }}
+                    readOnly
+                    className="cursor-not-allowed opacity-70"
                     required
                   />
                 </div>
@@ -184,17 +244,26 @@ const NatalChart = () => {
                     type="time"
                     value={formData.birthTime}
                     onChange={(e) => setFormData(prev => ({ ...prev, birthTime: e.target.value }))}
+                    readOnly
+                    className="cursor-not-allowed opacity-70"
                     required
                   />
                 </div>
 
-                <LocationAutocomplete
-                  value={formData.birthPlace}
-                  onChange={(value) => setFormData(prev => ({ ...prev, birthPlace: value }))}
-                  onLocationSelect={handleLocationSelect}
-                  label="Място на раждане"
-                  placeholder="Въведете град или населено място"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="birthPlace">Място на раждане</Label>
+                  <Input
+                    id="birthPlace"
+                    type="text"
+                    value={formData.birthPlace}
+                    readOnly
+                    className="cursor-not-allowed opacity-70"
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Данните се зареждат от вашия профил
+                  </p>
+                </div>
 
                 <Button type="submit" className="w-full" disabled={generating}>
                   {generating ? (
