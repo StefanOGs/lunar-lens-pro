@@ -84,26 +84,14 @@ const NatalChart = () => {
           birthPlace: profile.birth_place || "",
         });
 
-        // Geocode the birth place to get coordinates
-        if (profile.birth_place) {
-          try {
-            const { data: geoData, error: geoError } = await supabase.functions.invoke('geocode-location', {
-              body: { query: profile.birth_place }
-            });
-
-            if (!geoError && geoData && geoData.length > 0) {
-              const location = geoData[0];
-              setLocationData({
-                city: location.city || location.displayName,
-                country: location.country,
-                lat: location.lat,
-                lon: location.lon
-              });
-            }
-          } catch (geoError) {
-            console.error('Error geocoding location:', geoError);
-            // Continue even if geocoding fails - user can still see the form
-          }
+        // Use saved coordinates from profile
+        if (profile.birth_lat && profile.birth_lon && profile.birth_place) {
+          setLocationData({
+            city: profile.birth_place,
+            country: "",
+            lat: profile.birth_lat,
+            lon: profile.birth_lon
+          });
         }
       }
     } catch (error: any) {

@@ -93,6 +93,8 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
             birth_date: formData.birthDate,
             birth_time: formData.birthTime || null,
             birth_place: formData.birthPlace || null,
+            birth_lat: locationData?.lat || null,
+            birth_lon: locationData?.lon || null,
             zodiac_sign: formData.zodiacSign,
           })
           .eq('user_id', userId);
@@ -110,6 +112,8 @@ const ProfileSetup = ({ userId, onProfileCreated, existingProfile, isEditing = f
           birth_date: formData.birthDate,
           birth_time: formData.birthTime || null,
           birth_place: formData.birthPlace || null,
+          birth_lat: locationData?.lat || null,
+          birth_lon: locationData?.lon || null,
           zodiac_sign: formData.zodiacSign,
         });
 
