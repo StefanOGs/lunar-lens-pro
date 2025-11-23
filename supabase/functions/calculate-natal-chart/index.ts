@@ -286,23 +286,27 @@ ${aspects.length > 0 ? aspects.map((a: any) => `- ${a.planet1} ${a.aspect} ${a.p
     const analysis = aiData.choices[0].message.content;
     console.log('AI analysis generated');
 
-    // Return the complete natal chart data
+    // Return the complete natal chart data in the format expected by NatalChartModal
     const natalChart = {
-      birthDate,
-      birthTime,
-      birthPlace: `${location.city}, ${location.country}`,
-      sun: {
-        sign: sunSign,
-        degree: sunPlanet ? sunPlanet.degree : 0,
-        house: sunPlanet ? sunPlanet.house : 1
+      birthData: {
+        date: birthDate,
+        time: birthTime,
+        location: `${location.city}, ${location.country}`,
+        coordinates: {
+          lat: location.lat,
+          lon: location.lon
+        }
       },
-      ascendant: {
-        sign: ascendantSign,
-        degree: ascendantDegree
+      chart: {
+        sunSign: sunSign,
+        ascendant: {
+          sign: ascendantSign,
+          degree: ascendantDegree
+        },
+        planets,
+        houses,
+        aspects
       },
-      planets,
-      houses,
-      aspects,
       analysis
     };
 
