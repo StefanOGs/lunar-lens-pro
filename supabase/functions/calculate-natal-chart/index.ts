@@ -201,21 +201,24 @@ serve(async (req) => {
     for (const planet of planetsArray) {
       const planetData = planet as any;
       
+      // Extract planet name and sign from API structure
+      const planetName = planetData.planet?.en;
+      const signName = planetData.zodiac_sign?.name?.en;
+      
       // Skip if planet data is invalid
-      if (!planetData.name || !planetData.sign || !isValidSign(planetData.sign)) {
+      if (!planetName || !signName || !isValidSign(signName)) {
         console.warn('Invalid planet data:', planetData);
         continue;
       }
       
       // Only include main planets
-      const englishName = planetData.name;
-      if (!planetMap[englishName]) {
+      if (!planetMap[planetName]) {
         continue; // Skip asteroids and other bodies
       }
       
       planets.push({
-        name: planetMap[englishName],
-        sign: zodiacMap[planetData.sign] || planetData.sign,
+        name: planetMap[planetName],
+        sign: zodiacMap[signName] || signName,
         degree: Math.floor(planetData.normDegree % 30),
         house: planetData.house || 0
       });
@@ -247,11 +250,23 @@ serve(async (req) => {
     }
     const sunSign = sunPlanet.sign;
 
-    // Get Ascendant from houses data (FreeAstrologyAPI returns object with output property)
-    const housesObj = housesData.output || housesData;
-    const housesArray = Object.values(housesObj);
+    // Get Ascendant from houses data (FreeAstrologyAPI returns Houses array in output)
+    const housesObj = housesData.output;
+    if (!housesObj || !housesObj.Houses || !Array.isArray(housesObj.Houses)) {
+      console.error('Houses data not found');
+      return new Response(
+        JSON.stringify({ error: "INVALID_ASTRO_DATA", details: "Houses data not found" }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
     
-    if (!housesArray[0] || !(housesArray[0] as any).sign) {
+    const housesArray = housesObj.Houses;
+    const firstHouse = housesArray[0];
+    
+    if (!firstHouse || !firstHouse.zodiac_sign?.name?.en) {
       console.error('Ascendant not found');
       return new Response(
         JSON.stringify({ error: "INVALID_ASTRO_DATA", details: "Ascendant not found" }),
@@ -262,8 +277,8 @@ serve(async (req) => {
       );
     }
     
-    const firstHouse = housesArray[0] as any;
-    if (!isValidSign(firstHouse.sign)) {
+    const ascendantSignEn = firstHouse.zodiac_sign.name.en;
+    if (!isValidSign(ascendantSignEn)) {
       console.error('Invalid ascendant sign');
       return new Response(
         JSON.stringify({ error: "INVALID_ASTRO_DATA", details: "Invalid ascendant sign" }),
@@ -274,14 +289,16 @@ serve(async (req) => {
       );
     }
     
-    const ascendantSign = zodiacMap[firstHouse.sign] || firstHouse.sign;
+    const ascendantSign = zodiacMap[ascendantSignEn] || ascendantSignEn;
     const ascendantDegree = Math.floor(firstHouse.normDegree % 30);
 
     // Transform houses data to our format
     const houses = [];
     for (let i = 0; i < housesArray.length; i++) {
-      const house = housesArray[i] as any;
-      if (!house.sign || !isValidSign(house.sign)) {
+      const house = housesArray[i];
+      const houseSignEn = house.zodiac_sign?.name?.en;
+      
+      if (!houseSignEn || !isValidSign(houseSignEn)) {
         console.error('Invalid house data at index', i);
         return new Response(
           JSON.stringify({ error: "INVALID_ASTRO_DATA", details: `Invalid house ${i+1} data` }),
@@ -293,8 +310,8 @@ serve(async (req) => {
       }
       
       houses.push({
-        house: i + 1,
-        sign: zodiacMap[house.sign] || house.sign,
+        house: house.House,
+        sign: zodiacMap[houseSignEn] || houseSignEn,
         degree: Math.floor(house.normDegree % 30)
       });
     }
