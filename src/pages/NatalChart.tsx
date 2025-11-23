@@ -11,6 +11,7 @@ import Layout from "@/components/Layout";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import NatalChartModal from "@/components/NatalChartModal";
 import { useToast } from "@/hooks/use-toast";
+import { generateNatalChartWithAnalysis } from "@/lib/natalChartService";
 
 const NatalChart = () => {
   const navigate = useNavigate();
@@ -130,15 +131,12 @@ const NatalChart = () => {
     setGenerating(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('calculate-natal-chart', {
-        body: {
-          birthDate: isoDate,
-          birthTime: formData.birthTime,
-          location: locationData
-        }
-      });
-
-      if (error) throw error;
+      // Use local Swiss Ephemeris calculation
+      const data = await generateNatalChartWithAnalysis(
+        isoDate,
+        formData.birthTime,
+        locationData
+      );
 
       setChartData(data);
       setModalOpen(true);
