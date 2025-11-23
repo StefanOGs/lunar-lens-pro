@@ -166,6 +166,7 @@ const NatalChart = () => {
       lat: location.lat,
       lon: location.lon
     });
+    setFormData(prev => ({ ...prev, birthPlace: location.displayName }));
   };
 
   if (loading) {
@@ -240,17 +241,23 @@ const NatalChart = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="birthPlace">Място на раждане</Label>
-                  <Input
-                    id="birthPlace"
-                    type="text"
+                  <LocationAutocomplete
                     value={formData.birthPlace}
-                    readOnly
-                    className="cursor-not-allowed opacity-70"
-                    required
+                    onChange={(value) => setFormData(prev => ({ ...prev, birthPlace: value }))}
+                    onLocationSelect={handleLocationSelect}
+                    placeholder="Въведете град на раждане"
+                    label=""
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Данните се зареждат от вашия профил
-                  </p>
+                  {!locationData && (
+                    <p className="text-xs text-destructive">
+                      Моля, изберете точно място от списъка за прецизно изчисление
+                    </p>
+                  )}
+                  {locationData && (
+                    <p className="text-xs text-muted-foreground">
+                      ✓ Координати: {locationData.lat.toFixed(4)}°, {locationData.lon.toFixed(4)}°
+                    </p>
+                  )}
                 </div>
 
                 <Button type="submit" className="w-full" disabled={generating}>
