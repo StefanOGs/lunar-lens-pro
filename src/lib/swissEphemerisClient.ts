@@ -77,30 +77,36 @@ export interface NatalChartData {
   };
 }
 
+// Initialize Swiss Ephemeris WASM
+let sweph: any = null;
+
+const initSwissEph = async () => {
+  if (sweph) return sweph;
+  
+  const { default: Sweph } = await import('sweph-wasm');
+  sweph = await new Sweph({});
+  return sweph;
+};
+
 export const calculateNatalChart = async (
   birthDate: string,
   birthTime: string,
   location: { city: string; country: string; lat: number; lon: number }
 ): Promise<NatalChartData> => {
-  // Dynamic import of swisseph
-  const swisseph = await import('swisseph');
+  // Initialize Swiss Ephemeris
+  const swe = await initSwissEph();
 
   // Parse birth date and time
   const [year, month, day] = birthDate.split('-').map(Number);
   const [hour, minute] = birthTime.split(':').map(Number);
 
-  // Calculate Julian day
+  // Calculate Julian day (UT time)
   const time = hour + minute / 60;
-  const julianDay = swisseph.swe_julday(year, month, day, time, swisseph.SE_GREG_CAL);
+  const julianDay = swe.julday(year, month, day, time, swe.GREG_CAL);
 
   // Calculate houses using Placidus system
-  const housesResult = swisseph.swe_houses(julianDay, location.lat, location.lon, 'P');
-  
-  if ('error' in housesResult) {
-    throw new Error(`Failed to calculate houses: ${housesResult.error}`);
-  }
-  
-  const houseCusps = housesResult.house;
+  const housesResult = swe.houses(julianDay, location.lat, location.lon, 'P');
+  const houseCusps = housesResult.cusps.slice(1); // Remove first element (0 index is empty)
   const ascendantDegree = housesResult.ascendant;
 
   // Get ascendant sign
@@ -110,32 +116,26 @@ export const calculateNatalChart = async (
   const planets = [];
   const planetPositions: { name: string; degree: number }[] = [];
 
-  for (let planetId = swisseph.SE_SUN; planetId <= swisseph.SE_PLUTO; planetId++) {
-    const planetData = swisseph.swe_calc_ut(julianDay, planetId, swisseph.SEFLG_SWIEPH);
-    
-    if ('error' in planetData) {
-      console.warn(`Failed to calculate planet ${planetId}: ${planetData.error}`);
-      continue;
-    }
-    
-    if (!('longitude' in planetData)) {
-      console.warn(`Planet ${planetId} does not have longitude data`);
-      continue;
-    }
-    
-    const longitude = planetData.longitude;
-    const zodiac = getZodiacSign(longitude);
-    const house = getHousePosition(longitude, houseCusps);
+  // Planet IDs in sweph-wasm (SE_SUN = 0, SE_PLUTO = 9)
+  for (let planetId = 0; planetId <= 9; planetId++) {
+    try {
+      const planetData = swe.calc_ut(julianDay, planetId, swe.FLG_SWIEPH);
+      const longitude = planetData.longitude;
+      const zodiac = getZodiacSign(longitude);
+      const house = getHousePosition(longitude, houseCusps);
 
-    const planet = {
-      name: PLANET_NAMES_BG[planetId],
-      sign: zodiac.sign,
-      degree: zodiac.signDegree,
-      house: house
-    };
+      const planet = {
+        name: PLANET_NAMES_BG[planetId],
+        sign: zodiac.sign,
+        degree: zodiac.signDegree,
+        house: house
+      };
 
-    planets.push(planet);
-    planetPositions.push({ name: PLANET_NAMES_BG[planetId], degree: longitude });
+      planets.push(planet);
+      planetPositions.push({ name: PLANET_NAMES_BG[planetId], degree: longitude });
+    } catch (error) {
+      console.warn(`Failed to calculate planet ${planetId}:`, error);
+    }
   }
 
   // Get sun sign
@@ -185,8 +185,7 @@ export const calculateNatalChart = async (
     }
   }
 
-  // Close Swiss Ephemeris
-  swisseph.swe_close();
+  // Note: sweph-wasm doesn't require explicit cleanup like Node.js version
 
   return {
     birthData: {
