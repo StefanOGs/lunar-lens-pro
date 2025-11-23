@@ -1,0 +1,212 @@
+// Zodiac signs mapping
+const ZODIAC_SIGNS_BG = [
+  'Овен', 'Телец', 'Близнаци', 'Рак', 'Лъв', 'Дева',
+  'Везни', 'Скорпион', 'Стрелец', 'Козирог', 'Водолей', 'Риби'
+];
+
+const PLANET_NAMES_BG: { [key: number]: string } = {
+  0: 'Слънце',
+  1: 'Луна',
+  2: 'Меркурий',
+  3: 'Венера',
+  4: 'Марс',
+  5: 'Юпитер',
+  6: 'Сатурн',
+  7: 'Уран',
+  8: 'Нептун',
+  9: 'Плутон'
+};
+
+// Get zodiac sign from degree
+const getZodiacSign = (degree: number): { sign: string, signDegree: number } => {
+  const signIndex = Math.floor(degree / 30);
+  const signDegree = degree % 30;
+  return {
+    sign: ZODIAC_SIGNS_BG[signIndex],
+    signDegree: Math.floor(signDegree)
+  };
+};
+
+// Calculate house position for a planet
+const getHousePosition = (planetDegree: number, houseCusps: number[]): number => {
+  for (let i = 0; i < 12; i++) {
+    const currentCusp = houseCusps[i];
+    const nextCusp = houseCusps[(i + 1) % 12];
+    
+    if (nextCusp > currentCusp) {
+      if (planetDegree >= currentCusp && planetDegree < nextCusp) {
+        return i + 1;
+      }
+    } else {
+      // Handle wrap around 360°
+      if (planetDegree >= currentCusp || planetDegree < nextCusp) {
+        return i + 1;
+      }
+    }
+  }
+  return 1; // Default to first house
+};
+
+export interface NatalChartData {
+  birthData: {
+    date: string;
+    time: string;
+    location: string;
+    coordinates: { lat: number; lon: number };
+  };
+  chart: {
+    sunSign: string;
+    ascendant: { sign: string; degree: number };
+    planets: Array<{
+      name: string;
+      sign: string;
+      degree: number;
+      house: number;
+    }>;
+    houses: Array<{
+      house: number;
+      sign: string;
+      degree: number;
+    }>;
+    aspects: Array<{
+      planet1: string;
+      planet2: string;
+      aspect: string;
+      angle: number;
+    }>;
+  };
+}
+
+export const calculateNatalChart = async (
+  birthDate: string,
+  birthTime: string,
+  location: { city: string; country: string; lat: number; lon: number }
+): Promise<NatalChartData> => {
+  // Dynamic import of swisseph
+  const swisseph = await import('swisseph');
+
+  // Parse birth date and time
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const [hour, minute] = birthTime.split(':').map(Number);
+
+  // Calculate Julian day
+  const time = hour + minute / 60;
+  const julianDay = swisseph.swe_julday(year, month, day, time, swisseph.SE_GREG_CAL);
+
+  // Calculate houses using Placidus system
+  const housesResult = swisseph.swe_houses(julianDay, location.lat, location.lon, 'P');
+  
+  if ('error' in housesResult) {
+    throw new Error(`Failed to calculate houses: ${housesResult.error}`);
+  }
+  
+  const houseCusps = housesResult.house;
+  const ascendantDegree = housesResult.ascendant;
+
+  // Get ascendant sign
+  const ascendant = getZodiacSign(ascendantDegree);
+
+  // Calculate planet positions
+  const planets = [];
+  const planetPositions: { name: string; degree: number }[] = [];
+
+  for (let planetId = swisseph.SE_SUN; planetId <= swisseph.SE_PLUTO; planetId++) {
+    const planetData = swisseph.swe_calc_ut(julianDay, planetId, swisseph.SEFLG_SWIEPH);
+    
+    if ('error' in planetData) {
+      console.warn(`Failed to calculate planet ${planetId}: ${planetData.error}`);
+      continue;
+    }
+    
+    if (!('longitude' in planetData)) {
+      console.warn(`Planet ${planetId} does not have longitude data`);
+      continue;
+    }
+    
+    const longitude = planetData.longitude;
+    const zodiac = getZodiacSign(longitude);
+    const house = getHousePosition(longitude, houseCusps);
+
+    const planet = {
+      name: PLANET_NAMES_BG[planetId],
+      sign: zodiac.sign,
+      degree: zodiac.signDegree,
+      house: house
+    };
+
+    planets.push(planet);
+    planetPositions.push({ name: PLANET_NAMES_BG[planetId], degree: longitude });
+  }
+
+  // Get sun sign
+  const sunSign = planets[0].sign;
+
+  // Calculate houses data
+  const housesData = [];
+  for (let i = 0; i < 12; i++) {
+    const cuspDegree = houseCusps[i];
+    const zodiac = getZodiacSign(cuspDegree);
+    housesData.push({
+      house: i + 1,
+      sign: zodiac.sign,
+      degree: zodiac.signDegree
+    });
+  }
+
+  // Calculate aspects
+  const aspects = [];
+  const aspectTypes = [
+    { name: "Конюнкция", degree: 0, orb: 8 },
+    { name: "Опозиция", degree: 180, orb: 8 },
+    { name: "Квадрат", degree: 90, orb: 6 },
+    { name: "Тригон", degree: 120, orb: 8 },
+    { name: "Секстил", degree: 60, orb: 6 },
+  ];
+
+  for (let i = 0; i < planetPositions.length; i++) {
+    for (let j = i + 1; j < planetPositions.length; j++) {
+      const planet1 = planetPositions[i];
+      const planet2 = planetPositions[j];
+      
+      let angle = Math.abs(planet1.degree - planet2.degree);
+      if (angle > 180) angle = 360 - angle;
+      
+      for (const aspectType of aspectTypes) {
+        if (Math.abs(angle - aspectType.degree) <= aspectType.orb) {
+          aspects.push({
+            planet1: planet1.name,
+            planet2: planet2.name,
+            aspect: aspectType.name,
+            angle: Math.round(angle)
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  // Close Swiss Ephemeris
+  swisseph.swe_close();
+
+  return {
+    birthData: {
+      date: birthDate,
+      time: birthTime,
+      location: `${location.city}, ${location.country}`,
+      coordinates: {
+        lat: location.lat,
+        lon: location.lon
+      }
+    },
+    chart: {
+      sunSign,
+      ascendant: {
+        sign: ascendant.sign,
+        degree: ascendant.signDegree
+      },
+      planets,
+      houses: housesData,
+      aspects
+    }
+  };
+};
