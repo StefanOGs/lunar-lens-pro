@@ -21,12 +21,11 @@ serve(async (req) => {
     }
 
     // Get API credentials
-    const ASTROLOGY_API_USER_ID = Deno.env.get('ASTROLOGY_API_USER_ID');
     const ASTROLOGY_API_KEY = Deno.env.get('ASTROLOGY_API_KEY');
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
-    if (!ASTROLOGY_API_USER_ID || !ASTROLOGY_API_KEY) {
-      console.error('Astrology API credentials not configured');
+    if (!ASTROLOGY_API_KEY) {
+      console.error('Astrology API key not configured');
       return new Response(
         JSON.stringify({ error: "Astrology API not configured" }),
         { 
@@ -49,28 +48,34 @@ serve(async (req) => {
 
     // Parse birth data
     const birthDateTime = new Date(`${birthDate}T${birthTime}`);
-    const day = birthDateTime.getDate();
+    const date = birthDateTime.getDate();
     const month = birthDateTime.getMonth() + 1; // API expects 1-12
     const year = birthDateTime.getFullYear();
-    const hour = birthDateTime.getHours();
-    const min = birthDateTime.getMinutes();
+    const hours = birthDateTime.getHours();
+    const minutes = birthDateTime.getMinutes();
+    const seconds = 0;
 
     // Calculate timezone offset from longitude (approximation)
     // More accurate would be to use a timezone API, but this is a reasonable approximation
-    const tzone = Math.round(location.lon / 15 * 2) / 2; // Round to nearest 0.5
+    const timezone = Math.round(location.lon / 15 * 2) / 2; // Round to nearest 0.5
 
-    console.log('Birth data:', { day, month, year, hour, min, lat: location.lat, lon: location.lon, tzone });
+    console.log('Birth data:', { date, month, year, hours, minutes, latitude: location.lat, longitude: location.lon, timezone });
 
-    // Prepare API request data
+    // Prepare API request data in FreeAstrologyAPI format
     const apiData = {
-      day,
-      month,
       year,
-      hour,
-      min,
-      lat: location.lat,
-      lon: location.lon,
-      tzone
+      month,
+      date,
+      hours,
+      minutes,
+      seconds,
+      latitude: location.lat,
+      longitude: location.lon,
+      timezone,
+      config: {
+        observation_point: "topocentric",
+        ayanamsha: "lahiri"
+      }
     };
 
     // Fetch planets data from FreeAstrologyAPI
