@@ -83,9 +83,9 @@ let sweph: any = null;
 const initSwissEph = async () => {
   if (sweph) return sweph;
   
-  const Sweph = (await import('sweph-wasm')).default;
-  sweph = new Sweph({});
-  await sweph.init();
+  const SwissEPH = (await import('sweph-wasm')).default;
+  sweph = await SwissEPH.init();
+  await sweph.swe_set_ephe_path();
   return sweph;
 };
 
@@ -108,7 +108,7 @@ export const calculateNatalChart = async (
   // Calculate houses using Placidus system
   const housesResult = swe.swe_houses(julianDay, location.lat, location.lon, 'P');
   const houseCusps = housesResult.cusps.slice(1); // Remove first element (0 index is empty)
-  const ascendantDegree = housesResult.ascendant;
+  const ascendantDegree = housesResult.ascmc[0]; // Ascendant is first element of ascmc array
 
   // Get ascendant sign
   const ascendant = getZodiacSign(ascendantDegree);
@@ -120,8 +120,8 @@ export const calculateNatalChart = async (
   // Planet IDs in sweph-wasm (SE_SUN = 0, SE_PLUTO = 9)
   for (let planetId = 0; planetId <= 9; planetId++) {
     try {
-      const planetData = swe.swe_calc_ut(julianDay, planetId, 2); // 2 = SEFLG_SWIEPH
-      const longitude = planetData.longitude;
+      const planetData = swe.swe_calc_ut(julianDay, planetId, 0); // 0 = default flags
+      const longitude = planetData[0]; // longitude is first element
       const zodiac = getZodiacSign(longitude);
       const house = getHousePosition(longitude, houseCusps);
 
