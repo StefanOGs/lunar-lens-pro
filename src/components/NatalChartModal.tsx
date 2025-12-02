@@ -45,7 +45,7 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
   if (!data) return null;
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) return; onOpenChange(isOpen); }}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh]" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         <DialogHeader>
           <div className="w-16 h-16 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto mb-4">
