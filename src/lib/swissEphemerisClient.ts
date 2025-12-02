@@ -89,6 +89,68 @@ const initSwissEph = async () => {
   return sweph;
 };
 
+// Normalize date format (DD.MM.YYYY or YYYY-MM-DD → YYYY-MM-DD)
+const normalizeDateFormat = (dateStr: string): string => {
+  if (dateStr.includes('.')) {
+    // DD.MM.YYYY → YYYY-MM-DD
+    const [day, month, year] = dateStr.split('.');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+  return dateStr; // Already in YYYY-MM-DD format
+};
+
+// Normalize time format (10:00, 10.00, or 10 → HH:MM)
+const normalizeTimeFormat = (timeStr: string): string => {
+  if (timeStr.includes('.')) {
+    // 10.00 → 10:00
+    timeStr = timeStr.replace('.', ':');
+  }
+  if (!timeStr.includes(':')) {
+    // 10 → 10:00
+    timeStr = `${timeStr}:00`;
+  }
+  // Ensure HH:MM format
+  const [hours, minutes = '00'] = timeStr.split(':');
+  return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+};
+
+// Convert local datetime to UTC components for Swiss Ephemeris
+const convertToUTC = (
+  dateStr: string,
+  timeStr: string,
+  lat: number,
+  lon: number
+): { utYear: number; utMonth: number; utDay: number; utHour: number } => {
+  // Normalize formats
+  const normalizedDate = normalizeDateFormat(dateStr);
+  const normalizedTime = normalizeTimeFormat(timeStr);
+  
+  // Create local datetime ISO string
+  const localIso = `${normalizedDate}T${normalizedTime}:00`;
+  
+  console.log('🕐 Local input:', dateStr, timeStr);
+  console.log('📅 Normalized ISO:', localIso);
+  
+  // JavaScript Date automatically handles timezone + DST
+  const localDate = new Date(localIso);
+  
+  // Extract UTC components
+  const utYear = localDate.getUTCFullYear();
+  const utMonth = localDate.getUTCMonth() + 1; // JavaScript months are 0-indexed
+  const utDay = localDate.getUTCDate();
+  const utHours = localDate.getUTCHours();
+  const utMinutes = localDate.getUTCMinutes();
+  const utSeconds = localDate.getUTCSeconds();
+  
+  // Calculate fractional UTC hour for Swiss Ephemeris
+  const utHour = utHours + utMinutes / 60 + utSeconds / 3600;
+  
+  console.log('🌍 UTC components:', { utYear, utMonth, utDay, utHour });
+  console.log('📍 Location:', { lat, lon });
+  
+  return { utYear, utMonth, utDay, utHour };
+};
+
 export const calculateNatalChart = async (
   birthDate: string,
   birthTime: string,
@@ -97,13 +159,18 @@ export const calculateNatalChart = async (
   // Initialize Swiss Ephemeris
   const swe = await initSwissEph();
 
-  // Parse birth date and time
-  const [year, month, day] = birthDate.split('-').map(Number);
-  const [hour, minute] = birthTime.split(':').map(Number);
+  // Convert local datetime to UTC for Swiss Ephemeris
+  const { utYear, utMonth, utDay, utHour } = convertToUTC(
+    birthDate,
+    birthTime,
+    location.lat,
+    location.lon
+  );
 
-  // Calculate Julian day (UT time)
-  const time = hour + minute / 60;
-  const julianDay = swe.swe_julday(year, month, day, time, 1); // 1 = Gregorian calendar
+  // Calculate Julian day using UTC time
+  const julianDay = swe.swe_julday(utYear, utMonth, utDay, utHour, 1); // 1 = Gregorian calendar
+  
+  console.log('⏰ Julian Day:', julianDay);
 
   // Calculate houses using Placidus system
   const housesResult = swe.swe_houses(julianDay, location.lat, location.lon, 'P');
