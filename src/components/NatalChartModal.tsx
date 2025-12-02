@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, Star, Moon, Sun } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import NatalChartWheel from "./NatalChartWheel";
 
 interface NatalChartData {
   birthData: {
@@ -58,6 +59,30 @@ const NatalChartModal = ({ open, onOpenChange, data }: NatalChartModalProps) => 
 
         <ScrollArea className="max-h-[calc(90vh-200px)] pr-4">
           <div className="space-y-6">
+            {/* Natal Chart Wheel Visualization */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-center">Графична Натална Карта</CardTitle>
+                <CardDescription className="text-center">
+                  Визуализация на вашата натална карта с всички планети, домове и аспекти
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <NatalChartWheel
+                  planets={data.chart.planets || []}
+                  houses={data.chart.houses || []}
+                  aspects={data.chart.aspects || []}
+                  ascendantDegree={data.chart.houses?.[0] 
+                    ? (() => {
+                        const SIGNS = ["Овен", "Телец", "Близнаци", "Рак", "Лъв", "Дева", "Везни", "Скорпион", "Стрелец", "Козирог", "Водолей", "Риби"];
+                        const signIndex = SIGNS.indexOf(data.chart.houses[0].sign);
+                        return signIndex >= 0 ? signIndex * 30 + data.chart.houses[0].degree : 0;
+                      })()
+                    : 0}
+                />
+              </CardContent>
+            </Card>
+
             {/* Basic Chart Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card>
