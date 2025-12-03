@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Star, Heart, Moon } from "lucide-react";
+import { Sparkles, Star, Heart, Moon, Sun } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 
@@ -93,7 +93,6 @@ const Home = () => {
           <Card className="bg-card/80 backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Вашият астрологичен профил</CardTitle>
-              <CardDescription>Персонализирана информация за вашето раждане</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -126,7 +125,7 @@ const Home = () => {
           </Card>
 
           {/* Quick Links */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Link to="/horoscopes">
               <Card className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer h-full">
                 <CardHeader>
@@ -135,6 +134,18 @@ const Home = () => {
                     Хороскопи
                   </CardTitle>
                   <CardDescription className="text-xs">Вижте вашите хороскопи</CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link to="/zodiac">
+              <Card className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Sun className="w-5 h-5 text-primary" />
+                    Зодии
+                  </CardTitle>
+                  <CardDescription className="text-xs">Научете за зодиите</CardDescription>
                 </CardHeader>
               </Card>
             </Link>
