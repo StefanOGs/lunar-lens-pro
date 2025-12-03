@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import Horoscopes from "./pages/Horoscopes";
 import Services from "./pages/Services";
+import Compatibility from "./pages/Compatibility";
 import EditProfile from "./pages/EditProfile";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/horoscopes" element={<Horoscopes />} />
           <Route path="/services" element={<Services />} />
           <Route path="/natal-chart" element={<NatalChart />} />
+          <Route path="/compatibility" element={<Compatibility />} />
           <Route path="/zodiac" element={<ZodiacOverview />} />
           <Route path="/zodiac/:sign" element={<ZodiacDetails />} />
           <Route path="/edit-profile" element={<EditProfile />} />

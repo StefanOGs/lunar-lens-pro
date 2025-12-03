@@ -44,6 +44,8 @@ const Services = () => {
   const handleServiceClick = (serviceName: string) => {
     if (serviceName === "Натална карта") {
       navigate("/natal-chart");
+    } else if (serviceName === "Съвместимост") {
+      navigate("/compatibility");
     } else {
       setSelectedService(serviceName);
       setUpgradeDialogOpen(true);
