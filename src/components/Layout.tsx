@@ -107,14 +107,6 @@ const Layout = ({ children, user }: LayoutProps) => {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link to="/zodiac">Зодии</Link>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-start" 
-                    asChild
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
                     <Link to="/services">Услуги</Link>
                   </Button>
                   <Button 
