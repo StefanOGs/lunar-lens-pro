@@ -41,6 +41,9 @@ const Layout = ({ children, user }: LayoutProps) => {
                 <Link to="/horoscopes">Моите хороскопи</Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
+                <Link to="/zodiac">Зодии</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
                 <Link to="/services">Услуги</Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
@@ -97,6 +100,14 @@ const Layout = ({ children, user }: LayoutProps) => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Link to="/horoscopes">Моите хороскопи</Link>
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start" 
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link to="/zodiac">Зодии</Link>
                   </Button>
                   <Button 
                     variant="ghost" 

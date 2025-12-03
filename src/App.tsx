@@ -12,6 +12,8 @@ import EditProfile from "./pages/EditProfile";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
 import NatalChart from "./pages/NatalChart";
+import ZodiacOverview from "./pages/ZodiacOverview";
+import ZodiacDetails from "./pages/ZodiacDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/horoscopes" element={<Horoscopes />} />
           <Route path="/services" element={<Services />} />
           <Route path="/natal-chart" element={<NatalChart />} />
+          <Route path="/zodiac" element={<ZodiacOverview />} />
+          <Route path="/zodiac/:sign" element={<ZodiacDetails />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
