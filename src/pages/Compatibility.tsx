@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, Sparkles, Loader2, Info } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Heart, Sparkles, Loader2, Info, MessageCircle, Flame, Target, Clock, Trophy } from "lucide-react";
 import Layout from "@/components/Layout";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import { toast } from "sonner";
@@ -19,6 +20,41 @@ interface PersonData {
   birthLat: number | null;
   birthLon: number | null;
 }
+
+interface AspectResult {
+  name: string;
+  score: number;
+  interpretation: string;
+}
+
+interface CompatibilityResult {
+  overallScore: number;
+  aspects: AspectResult[];
+  summary: string;
+}
+
+const aspectIcons: Record<string, React.ReactNode> = {
+  "Емоционална съвместимост": <Heart className="w-5 h-5" />,
+  "Комуникация и разбирателство": <MessageCircle className="w-5 h-5" />,
+  "Страст и химия": <Flame className="w-5 h-5" />,
+  "Житейски цели и ценности": <Target className="w-5 h-5" />,
+  "Темперамент и ежедневие": <Clock className="w-5 h-5" />,
+  "Дългосрочен потенциал": <Trophy className="w-5 h-5" />,
+};
+
+const getScoreColor = (score: number): string => {
+  if (score >= 8) return "text-green-500";
+  if (score >= 6) return "text-yellow-500";
+  if (score >= 4) return "text-orange-500";
+  return "text-red-500";
+};
+
+const getProgressColor = (score: number): string => {
+  if (score >= 8) return "bg-green-500";
+  if (score >= 6) return "bg-yellow-500";
+  if (score >= 4) return "bg-orange-500";
+  return "bg-red-500";
+};
 
 const getZodiacSign = (dateStr: string): string => {
   const [year, month, day] = dateStr.split('-').map(Number);
@@ -69,7 +105,7 @@ const Compatibility = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [dataLevel, setDataLevel] = useState<'basic' | 'medium' | 'full'>('basic');
   
   const [person1, setPerson1] = useState<PersonData>({
@@ -105,7 +141,6 @@ const Compatibility = () => {
   }, [navigate]);
 
   useEffect(() => {
-    // Load user profile data for person1
     const loadProfile = async () => {
       if (!user) return;
       
@@ -177,7 +212,7 @@ const Compatibility = () => {
 
       if (error) throw error;
       
-      setResult(data.analysis);
+      setResult(data.result);
     } catch (error) {
       console.error('Error analyzing compatibility:', error);
       toast.error("Грешка при анализа. Моля опитайте отново.");
@@ -188,7 +223,6 @@ const Compatibility = () => {
 
   const formatDateForInput = (dateStr: string) => {
     if (!dateStr) return "";
-    // Handle both YYYY-MM-DD and DD/MM/YYYY formats
     if (dateStr.includes('-')) return dateStr;
     const [day, month, year] = dateStr.split('/');
     return `${year}-${month}-${day}`;
@@ -227,7 +261,7 @@ const Compatibility = () => {
             <CardContent className="text-sm text-muted-foreground space-y-2">
               <p><strong>Само дата на раждане:</strong> Базова съвместимост по зодиакални знаци</p>
               <p><strong>Дата + час ИЛИ място:</strong> По-детайлен анализ с допълнителни фактори</p>
-              <p><strong>Дата + час + място:</strong> Пълен астрологичен анализ с асцендент, Луна и планетарни аспекти</p>
+              <p><strong>Дата + час + място:</strong> Пълен астрологичен анализ с асцендент и планети</p>
             </CardContent>
           </Card>
 
@@ -365,26 +399,76 @@ const Compatibility = () => {
           </div>
 
           {result && (
-            <Card className="bg-card/80 backdrop-blur-sm border-primary/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Heart className="w-6 h-6 text-primary" />
-                  Резултат от анализа
-                  <span className="text-sm font-normal text-muted-foreground ml-2">
-                    ({dataLevel === 'full' ? 'Пълен анализ' : dataLevel === 'medium' ? 'Среден детайл' : 'Базов анализ'})
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="prose prose-invert max-w-none">
-                  {result.split('\n').map((paragraph, index) => (
-                    <p key={index} className="mb-4 text-foreground/90 leading-relaxed">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              {/* Overall Score */}
+              <Card className="bg-card/80 backdrop-blur-sm border-primary/30">
+                <CardContent className="pt-6">
+                  <div className="text-center space-y-4">
+                    <div className="relative inline-flex items-center justify-center">
+                      <div className="w-32 h-32 rounded-full border-4 border-primary/30 flex items-center justify-center">
+                        <span className={`text-5xl font-bold ${getScoreColor(result.overallScore / 10)}`}>
+                          {result.overallScore}
+                        </span>
+                      </div>
+                      <Heart className="absolute -top-2 -right-2 w-8 h-8 text-primary" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">Обща съвместимост</h2>
+                      <p className="text-sm text-muted-foreground">
+                        ({dataLevel === 'full' ? 'Пълен анализ' : dataLevel === 'medium' ? 'Среден детайл' : 'Базов анализ'})
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Aspects */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {result.aspects.map((aspect, index) => (
+                  <Card key={index} className="bg-card/80 backdrop-blur-sm">
+                    <CardContent className="pt-6">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-primary">
+                              {aspectIcons[aspect.name] || <Sparkles className="w-5 h-5" />}
+                            </span>
+                            <h3 className="font-semibold text-sm">{aspect.name}</h3>
+                          </div>
+                          <span className={`text-lg font-bold ${getScoreColor(aspect.score)}`}>
+                            {aspect.score}/10
+                          </span>
+                        </div>
+                        <div className="relative h-2 bg-muted rounded-full overflow-hidden">
+                          <div 
+                            className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ${getProgressColor(aspect.score)}`}
+                            style={{ width: `${aspect.score * 10}%` }}
+                          />
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {aspect.interpretation}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Summary */}
+              <Card className="bg-card/80 backdrop-blur-sm border-primary/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    Обобщение
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-foreground/90 leading-relaxed">
+                    {result.summary}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </div>
       </div>
