@@ -18,84 +18,36 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    // Build prompt based on data level
-    let prompt = '';
-    
-    if (dataLevel === 'basic') {
-      prompt = `Направи базов астрологичен анализ на съвместимостта между двама души на БЪЛГАРСКИ ЕЗИК.
+    // Build context based on data level
+    let context = `Анализирай астрологичната съвместимост между:
 
 Първи човек: ${person1.name || 'Човек 1'}
-- Зодия: ${person1.zodiacSign}
+- Зодия: ${person1.zodiacSign}`;
 
-Втори човек: ${person2.name || 'Човек 2'}
-- Зодия: ${person2.zodiacSign}
-
-Дай кратък, но съдържателен анализ (около 200-300 думи) на съвместимостта им базиран на зодиакалните им знаци. Включи:
-1. Общо описание на съвместимостта между тези две зодии
-2. Силни страни на връзката
-3. Потенциални предизвикателства
-4. Съвет за хармонични отношения
-
-Бъди позитивен, но реалистичен. Не споменавай, че анализът е базов.`;
-    } else if (dataLevel === 'medium') {
-      prompt = `Направи средно-детайлен астрологичен анализ на съвместимостта между двама души на БЪЛГАРСКИ ЕЗИК.
-
-Първи човек: ${person1.name || 'Човек 1'}
-- Зодия: ${person1.zodiacSign}
-- Дата на раждане: ${person1.birthDate}
-${person1.birthTime ? `- Час на раждане: ${person1.birthTime}` : ''}
-${person1.birthPlace ? `- Място на раждане: ${person1.birthPlace}` : ''}
-
-Втори човек: ${person2.name || 'Човек 2'}
-- Зодия: ${person2.zodiacSign}
-- Дата на раждане: ${person2.birthDate}
-${person2.birthTime ? `- Час на раждане: ${person2.birthTime}` : ''}
-${person2.birthPlace ? `- Място на раждане: ${person2.birthPlace}` : ''}
-
-Дай детайлен анализ (около 400-500 думи) включващ:
-1. Съвместимост по слънчеви знаци
-2. Елементна съвместимост (огън, земя, въздух, вода)
-3. Модална съвместимост (кардинален, фиксиран, мутабилен)
-4. Емоционална и комуникационна динамика
-5. Силни страни и предизвикателства
-6. Практически съвети за връзката
-
-Бъди позитивен, но реалистичен.`;
-    } else {
-      // Full analysis
-      prompt = `Направи ПЪЛЕН и ЗАДЪЛБОЧЕН астрологичен анализ на съвместимостта между двама души на БЪЛГАРСКИ ЕЗИК.
-
-Първи човек: ${person1.name || 'Човек 1'}
-- Зодия: ${person1.zodiacSign}
-- Дата на раждане: ${person1.birthDate}
-- Час на раждане: ${person1.birthTime}
-- Място на раждане: ${person1.birthPlace}
-- Координати: ${person1.birthLat}, ${person1.birthLon}
-
-Втори човек: ${person2.name || 'Човек 2'}
-- Зодия: ${person2.zodiacSign}
-- Дата на раждане: ${person2.birthDate}
-- Час на раждане: ${person2.birthTime}
-- Място на раждане: ${person2.birthPlace}
-- Координати: ${person2.birthLat}, ${person2.birthLon}
-
-Дай ИЗЧЕРПАТЕЛЕН астрологичен анализ (около 600-800 думи) включващ:
-
-1. **Слънчева съвместимост** - как слънчевите им знаци взаимодействат
-2. **Лунна съвместимост** - емоционална връзка и нужди (базирано на датата и часа)
-3. **Асцендентна динамика** - първо впечатление и външно изразяване
-4. **Венера и Марс** - романтична и сексуална съвместимост
-5. **Меркурий** - комуникационен стил
-6. **Елементен баланс** - огън, земя, въздух, вода
-7. **Потенциални аспекти** - хармонични и напрегнати връзки между планетите
-8. **Кармични връзки** - дълбоки духовни уроци
-9. **Силни страни на връзката**
-10. **Области за работа**
-11. **Дългосрочен потенциал**
-12. **Практически съвети за хармония**
-
-Бъди задълбочен, мъдър и балансиран. Използвай астрологична терминология, но я обяснявай разбираемо.`;
+    if (dataLevel !== 'basic') {
+      context += `
+- Дата на раждане: ${person1.birthDate}`;
+      if (person1.birthTime) context += `\n- Час на раждане: ${person1.birthTime}`;
+      if (person1.birthPlace) context += `\n- Място на раждане: ${person1.birthPlace}`;
     }
+
+    context += `
+
+Втори човек: ${person2.name || 'Човек 2'}
+- Зодия: ${person2.zodiacSign}`;
+
+    if (dataLevel !== 'basic') {
+      context += `
+- Дата на раждане: ${person2.birthDate}`;
+      if (person2.birthTime) context += `\n- Час на раждане: ${person2.birthTime}`;
+      if (person2.birthPlace) context += `\n- Място на раждане: ${person2.birthPlace}`;
+    }
+
+    context += `
+
+Ниво на анализ: ${dataLevel === 'full' ? 'пълен (с асцендент и планети)' : dataLevel === 'medium' ? 'среден (с допълнителни фактори)' : 'базов (само зодии)'}
+
+Дай точки от 0 до 10 за всеки аспект и кратко тълкуване (2-3 изречения). Бъди реалистичен но позитивен.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -108,13 +60,50 @@ ${person2.birthPlace ? `- Място на раждане: ${person2.birthPlace}`
         messages: [
           {
             role: 'system',
-            content: 'Ти си опитен астролог, специализиран в анализ на съвместимост между партньори. Даваш мъдри, балансирани и полезни съвети на български език. Избягваш крайности и предоставяш практически насоки.'
+            content: 'Ти си опитен астролог. Анализираш съвместимост между двама души на български език. Даваш точни оценки и кратки, ясни тълкувания.'
           },
           {
             role: 'user',
-            content: prompt
+            content: context
           }
         ],
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "compatibility_result",
+              description: "Структуриран резултат от анализа на съвместимост",
+              parameters: {
+                type: "object",
+                properties: {
+                  overallScore: {
+                    type: "number",
+                    description: "Обща оценка от 0 до 100"
+                  },
+                  aspects: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        name: { type: "string", description: "Име на аспекта" },
+                        score: { type: "number", description: "Оценка от 0 до 10" },
+                        interpretation: { type: "string", description: "Кратко тълкуване (2-3 изречения)" }
+                      },
+                      required: ["name", "score", "interpretation"]
+                    },
+                    description: "6 аспекта: Емоционална съвместимост, Комуникация и разбирателство, Страст и химия, Житейски цели и ценности, Темперамент и ежедневие, Дългосрочен потенциал"
+                  },
+                  summary: {
+                    type: "string",
+                    description: "Финално обобщение (до 5 изречения)"
+                  }
+                },
+                required: ["overallScore", "aspects", "summary"]
+              }
+            }
+          }
+        ],
+        tool_choice: { type: "function", function: { name: "compatibility_result" } }
       }),
     });
 
@@ -139,10 +128,18 @@ ${person2.birthPlace ? `- Място на раждане: ${person2.birthPlace}`
     }
 
     const data = await response.json();
-    const analysis = data.choices?.[0]?.message?.content || 'Не можах да генерирам анализ.';
+    console.log('AI response:', JSON.stringify(data, null, 2));
+    
+    // Extract structured result from tool call
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    if (!toolCall || toolCall.function.name !== 'compatibility_result') {
+      throw new Error('Invalid response format from AI');
+    }
+
+    const result = JSON.parse(toolCall.function.arguments);
 
     return new Response(
-      JSON.stringify({ analysis }),
+      JSON.stringify({ result }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
