@@ -13,6 +13,7 @@ import EditProfile from "./pages/EditProfile";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
 import NatalChart from "./pages/NatalChart";
+import LunarCalendar from "./pages/LunarCalendar";
 import ZodiacOverview from "./pages/ZodiacOverview";
 import ZodiacDetails from "./pages/ZodiacDetails";
 import NotFound from "./pages/NotFound";
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/services" element={<Services />} />
           <Route path="/natal-chart" element={<NatalChart />} />
           <Route path="/compatibility" element={<Compatibility />} />
+          <Route path="/lunar-calendar" element={<LunarCalendar />} />
           <Route path="/zodiac" element={<ZodiacOverview />} />
           <Route path="/zodiac/:sign" element={<ZodiacDetails />} />
           <Route path="/edit-profile" element={<EditProfile />} />

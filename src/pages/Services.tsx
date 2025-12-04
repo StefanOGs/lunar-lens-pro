@@ -46,6 +46,8 @@ const Services = () => {
       navigate("/natal-chart");
     } else if (serviceName === "Съвместимост") {
       navigate("/compatibility");
+    } else if (serviceName === "Лунен календар") {
+      navigate("/lunar-calendar");
     } else {
       setSelectedService(serviceName);
       setUpgradeDialogOpen(true);
