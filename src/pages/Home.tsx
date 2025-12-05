@@ -162,7 +162,7 @@ const Home = () => {
               </Card>
             </Link>
 
-            <Link to="/services">
+            <Link to="/compatibility">
               <Card className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer h-full">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-base">
@@ -174,7 +174,7 @@ const Home = () => {
               </Card>
             </Link>
 
-            <Link to="/services">
+            <Link to="/lunar-calendar">
               <Card className="bg-card/80 backdrop-blur-sm hover:shadow-lg transition-shadow cursor-pointer h-full">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-base">
