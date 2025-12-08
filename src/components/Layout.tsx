@@ -1,11 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserIcon, Settings } from "lucide-react";
+import { LogOut, UserIcon, Settings, ArrowLeft, Menu } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { User } from "@supabase/supabase-js";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
 import { useState } from "react";
 
 interface LayoutProps {
@@ -15,7 +14,15 @@ interface LayoutProps {
 
 const Layout = ({ children, user }: LayoutProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
+  // Don't show back button on home page
+  const showBackButton = location.pathname !== "/home" && location.pathname !== "/";
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -148,7 +155,20 @@ const Layout = ({ children, user }: LayoutProps) => {
         </div>
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 relative">
+        {showBackButton && (
+          <div className="container mx-auto px-4 pt-4">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleGoBack}
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Назад
+            </Button>
+          </div>
+        )}
         {children}
       </main>
 
