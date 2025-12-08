@@ -8,7 +8,12 @@ interface WelcomeEmailRequest {
   fullName: string;
 }
 
-const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
+const APP_URL = "https://eclyptica.com";
+
+// Cosmic header image (royalty-free space/stars image)
+const HEADER_IMAGE = "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=600&h=200&fit=crop&q=80";
+
+const getWelcomeEmailTemplate = (fullName: string) => `
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -16,80 +21,159 @@ const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Добре дошли в Eclyptica</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
 </head>
-<body style="margin: 0; padding: 0; background-color: #f7f7f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f7f7f7; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; background-color: #0f0f23; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+  
+  <!-- Wrapper Table -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #0f0f23; padding: 20px 10px;">
     <tr>
-      <td align="center">
-        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); max-width: 600px; width: 100%;">
+      <td align="center" style="padding: 0;">
+        
+        <!-- Main Container -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="background-color: #1a1a2e; border-radius: 16px; max-width: 600px; width: 100%; overflow: hidden; box-shadow: 0 8px 32px rgba(108, 92, 231, 0.2);">
           
-          <!-- Header -->
+          <!-- Header Image -->
           <tr>
-            <td style="padding: 40px 40px 20px 40px; text-align: center; border-bottom: 1px solid #eee;">
-              <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: #6c5ce7; letter-spacing: -0.5px;">✨ Eclyptica</h1>
-              <p style="margin: 8px 0 0 0; font-size: 14px; color: #888;">Вашият личен астрологичен гид</p>
+            <td style="padding: 0; line-height: 0;">
+              <img src="${HEADER_IMAGE}" alt="Звездно небе" width="600" style="width: 100%; max-width: 600px; height: auto; display: block; border: 0;" />
             </td>
           </tr>
           
-          <!-- Headline -->
+          <!-- Logo & Brand -->
           <tr>
-            <td style="padding: 40px 40px 20px 40px; text-align: center;">
-              <h2 style="margin: 0; font-size: 24px; font-weight: 600; color: #333; line-height: 1.4;">Добре дошли, ${fullName}! 🌟</h2>
+            <td style="padding: 30px 24px 20px 24px; text-align: center;">
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; color: #a78bfa; letter-spacing: 1px;">✨ Eclyptica</h1>
+              <p style="margin: 8px 0 0 0; font-size: 14px; color: #8b8ba7;">Вашият личен астрологичен гид</p>
+            </td>
+          </tr>
+          
+          <!-- Welcome Headline -->
+          <tr>
+            <td style="padding: 10px 24px 16px 24px; text-align: center;">
+              <h2 style="margin: 0; font-size: 22px; font-weight: 600; color: #ffffff; line-height: 1.4;">
+                Добре дошли, ${fullName}! 🌟
+              </h2>
             </td>
           </tr>
           
           <!-- Main Message -->
           <tr>
-            <td style="padding: 0 40px 30px 40px; text-align: center;">
-              <p style="margin: 0; font-size: 16px; color: #555; line-height: 1.6;">
-                Радваме се, че се присъединихте към Eclyptica! Вече имате достъп до персонализирани астрологични прогнози, натални карти и много други функции, които ще ви помогнат да разберете по-добре себе си и света около вас.
+            <td style="padding: 0 24px 24px 24px; text-align: center;">
+              <p style="margin: 0; font-size: 15px; color: #c4c4d4; line-height: 1.7;">
+                Радваме се, че се присъединихте към Eclyptica! Вече имате достъп до персонализирани астрологични прогнози, натални карти и много други функции.
               </p>
             </td>
           </tr>
           
           <!-- CTA Button -->
           <tr>
-            <td style="padding: 0 40px 40px 40px; text-align: center;">
-              <a href="${appUrl}" target="_blank" style="display: inline-block; background-color: #6c5ce7; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; padding: 14px 32px; border-radius: 8px; box-shadow: 0 4px 14px rgba(108, 92, 231, 0.4);">
-                Започнете сега
-              </a>
+            <td style="padding: 0 24px 32px 24px; text-align: center;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                <tr>
+                  <td style="background: linear-gradient(135deg, #6c5ce7 0%, #a78bfa 100%); border-radius: 10px;">
+                    <a href="${APP_URL}/home" target="_blank" style="display: inline-block; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; padding: 16px 40px; border-radius: 10px;">
+                      Започнете сега
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 0 24px;">
+              <div style="height: 1px; background: linear-gradient(90deg, transparent, #3d3d5c, transparent);"></div>
             </td>
           </tr>
           
           <!-- Features Section -->
           <tr>
-            <td style="padding: 0 40px 40px 40px;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f9f9fb; border-radius: 10px; padding: 24px;">
+            <td style="padding: 28px 24px;">
+              <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #ffffff; text-align: center;">
+                Открийте нашите услуги
+              </h3>
+              
+              <!-- Feature 1 -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 12px;">
                 <tr>
-                  <td style="padding: 24px;">
-                    <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #333; text-align: center;">Открийте нашите услуги</h3>
-                    
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                      <tr>
-                        <td style="padding: 12px 0; border-bottom: 1px solid #eee;">
-                          <a href="${appUrl}/horoscopes" target="_blank" style="color: #6c5ce7; text-decoration: none; font-size: 15px; font-weight: 500;">
-                            📅 Дневен хороскоп
-                          </a>
-                          <p style="margin: 4px 0 0 24px; font-size: 13px; color: #777;">Получавайте персонализирани прогнози всеки ден</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 12px 0; border-bottom: 1px solid #eee;">
-                          <a href="${appUrl}/natal-chart" target="_blank" style="color: #6c5ce7; text-decoration: none; font-size: 15px; font-weight: 500;">
-                            🔮 Натална карта
-                          </a>
-                          <p style="margin: 4px 0 0 24px; font-size: 13px; color: #777;">Разберете позициите на планетите при раждането ви</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 12px 0;">
-                          <a href="${appUrl}/compatibility" target="_blank" style="color: #6c5ce7; text-decoration: none; font-size: 15px; font-weight: 500;">
-                            💑 Анализ на съвместимост
-                          </a>
-                          <p style="margin: 4px 0 0 24px; font-size: 13px; color: #777;">Проверете съвместимостта с партньора си</p>
-                        </td>
-                      </tr>
-                    </table>
+                  <td style="background-color: #252542; border-radius: 10px; padding: 16px;">
+                    <a href="${APP_URL}/horoscopes" target="_blank" style="text-decoration: none; display: block;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td width="40" valign="top" style="padding-right: 12px;">
+                            <span style="font-size: 24px;">📅</span>
+                          </td>
+                          <td valign="top">
+                            <p style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #a78bfa;">
+                              Дневен хороскоп
+                            </p>
+                            <p style="margin: 0; font-size: 13px; color: #8b8ba7; line-height: 1.5;">
+                              Получавайте персонализирани прогнози всеки ден
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Feature 2 -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 12px;">
+                <tr>
+                  <td style="background-color: #252542; border-radius: 10px; padding: 16px;">
+                    <a href="${APP_URL}/natal-chart" target="_blank" style="text-decoration: none; display: block;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td width="40" valign="top" style="padding-right: 12px;">
+                            <span style="font-size: 24px;">🔮</span>
+                          </td>
+                          <td valign="top">
+                            <p style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #a78bfa;">
+                              Натална карта
+                            </p>
+                            <p style="margin: 0; font-size: 13px; color: #8b8ba7; line-height: 1.5;">
+                              Разберете позициите на планетите при раждането ви
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Feature 3 -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #252542; border-radius: 10px; padding: 16px;">
+                    <a href="${APP_URL}/compatibility" target="_blank" style="text-decoration: none; display: block;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td width="40" valign="top" style="padding-right: 12px;">
+                            <span style="font-size: 24px;">💑</span>
+                          </td>
+                          <td valign="top">
+                            <p style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #a78bfa;">
+                              Анализ на съвместимост
+                            </p>
+                            <p style="margin: 0; font-size: 13px; color: #8b8ba7; line-height: 1.5;">
+                              Проверете съвместимостта с партньора си
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </a>
                   </td>
                 </tr>
               </table>
@@ -98,15 +182,18 @@ const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
           
           <!-- Footer -->
           <tr>
-            <td style="padding: 30px 40px; background-color: #fafafa; border-radius: 0 0 12px 12px; border-top: 1px solid #eee;">
+            <td style="padding: 24px; background-color: #12121f; border-radius: 0 0 16px 16px;">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td style="text-align: center;">
-                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #555;">
-                      Нужда от помощ? <a href="mailto:support@eclyptica.com" style="color: #6c5ce7; text-decoration: none;">Свържете се с нас</a>
+                    <p style="margin: 0 0 8px 0; font-size: 13px; color: #8b8ba7;">
+                      Нужда от помощ? 
+                      <a href="mailto:support@eclyptica.com" style="color: #a78bfa; text-decoration: none;">
+                        Свържете се с нас
+                      </a>
                     </p>
-                    <p style="margin: 0; font-size: 13px; color: #999;">
-                      © 2025 Eclyptica. Вашият път към звездите.
+                    <p style="margin: 0; font-size: 12px; color: #5c5c7a;">
+                      © 2025 Eclyptica • Вашият път към звездите
                     </p>
                   </td>
                 </tr>
@@ -115,9 +202,11 @@ const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
           </tr>
           
         </table>
+        
       </td>
     </tr>
   </table>
+  
 </body>
 </html>
 `;
@@ -155,13 +244,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     console.log(`Sending welcome email to ${email}`);
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-    const appUrl = supabaseUrl.replace('.supabase.co', '.lovable.app');
-
     const emailResponse = await sendResendEmail(
       email,
       "Добре дошли в Eclyptica! ✨",
-      getWelcomeEmailTemplate(fullName, appUrl)
+      getWelcomeEmailTemplate(fullName)
     );
 
     console.log("Welcome email sent successfully:", emailResponse);
