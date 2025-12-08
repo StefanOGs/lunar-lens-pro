@@ -3,19 +3,20 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface WelcomeEmailRequest {
+interface VerificationEmailRequest {
   email: string;
   fullName: string;
+  verificationLink: string;
 }
 
-const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
+const getVerificationEmailTemplate = (fullName: string, verificationLink: string) => `
 <!DOCTYPE html>
 <html lang="bg">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Добре дошли в Eclyptica</title>
+  <title>Потвърдете имейла си - Eclyptica</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f7f7f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f7f7f7; padding: 40px 20px;">
@@ -31,18 +32,30 @@ const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
             </td>
           </tr>
           
-          <!-- Headline -->
+          <!-- Icon -->
           <tr>
             <td style="padding: 40px 40px 20px 40px; text-align: center;">
-              <h2 style="margin: 0; font-size: 24px; font-weight: 600; color: #333; line-height: 1.4;">Добре дошли, ${fullName}! 🌟</h2>
+              <div style="display: inline-block; width: 80px; height: 80px; background-color: #f0efff; border-radius: 50%; line-height: 80px; font-size: 36px;">
+                ✉️
+              </div>
+            </td>
+          </tr>
+          
+          <!-- Headline -->
+          <tr>
+            <td style="padding: 0 40px 20px 40px; text-align: center;">
+              <h2 style="margin: 0; font-size: 24px; font-weight: 600; color: #333; line-height: 1.4;">Потвърдете имейл адреса си</h2>
             </td>
           </tr>
           
           <!-- Main Message -->
           <tr>
             <td style="padding: 0 40px 30px 40px; text-align: center;">
+              <p style="margin: 0 0 16px 0; font-size: 16px; color: #555; line-height: 1.6;">
+                Здравейте${fullName ? `, ${fullName}` : ''}!
+              </p>
               <p style="margin: 0; font-size: 16px; color: #555; line-height: 1.6;">
-                Радваме се, че се присъединихте към Eclyptica! Вече имате достъп до персонализирани астрологични прогнози, натални карти и много други функции, които ще ви помогнат да разберете по-добре себе си и света около вас.
+                Благодарим ви за регистрацията в Eclyptica. За да завършите настройката на акаунта си, моля потвърдете имейл адреса си като кликнете на бутона по-долу.
               </p>
             </td>
           </tr>
@@ -50,46 +63,33 @@ const getWelcomeEmailTemplate = (fullName: string, appUrl: string) => `
           <!-- CTA Button -->
           <tr>
             <td style="padding: 0 40px 40px 40px; text-align: center;">
-              <a href="${appUrl}" target="_blank" style="display: inline-block; background-color: #6c5ce7; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; padding: 14px 32px; border-radius: 8px; box-shadow: 0 4px 14px rgba(108, 92, 231, 0.4);">
-                Започнете сега
+              <a href="${verificationLink}" target="_blank" style="display: inline-block; background-color: #6c5ce7; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; padding: 14px 32px; border-radius: 8px; box-shadow: 0 4px 14px rgba(108, 92, 231, 0.4);">
+                Потвърдете имейла
               </a>
             </td>
           </tr>
           
-          <!-- Features Section -->
+          <!-- Alternative Link -->
+          <tr>
+            <td style="padding: 0 40px 30px 40px; text-align: center;">
+              <p style="margin: 0; font-size: 14px; color: #777; line-height: 1.6;">
+                Ако бутонът не работи, копирайте и поставете следния линк в браузъра си:
+              </p>
+              <p style="margin: 10px 0 0 0; font-size: 13px; color: #6c5ce7; word-break: break-all;">
+                <a href="${verificationLink}" style="color: #6c5ce7; text-decoration: none;">${verificationLink}</a>
+              </p>
+            </td>
+          </tr>
+          
+          <!-- Security Note -->
           <tr>
             <td style="padding: 0 40px 40px 40px;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f9f9fb; border-radius: 10px; padding: 24px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #fff8e6; border-radius: 8px; border-left: 4px solid #f5a623;">
                 <tr>
-                  <td style="padding: 24px;">
-                    <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #333; text-align: center;">Открийте нашите услуги</h3>
-                    
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                      <tr>
-                        <td style="padding: 12px 0; border-bottom: 1px solid #eee;">
-                          <a href="${appUrl}/horoscopes" target="_blank" style="color: #6c5ce7; text-decoration: none; font-size: 15px; font-weight: 500;">
-                            📅 Дневен хороскоп
-                          </a>
-                          <p style="margin: 4px 0 0 24px; font-size: 13px; color: #777;">Получавайте персонализирани прогнози всеки ден</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 12px 0; border-bottom: 1px solid #eee;">
-                          <a href="${appUrl}/natal-chart" target="_blank" style="color: #6c5ce7; text-decoration: none; font-size: 15px; font-weight: 500;">
-                            🔮 Натална карта
-                          </a>
-                          <p style="margin: 4px 0 0 24px; font-size: 13px; color: #777;">Разберете позициите на планетите при раждането ви</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 12px 0;">
-                          <a href="${appUrl}/compatibility" target="_blank" style="color: #6c5ce7; text-decoration: none; font-size: 15px; font-weight: 500;">
-                            💑 Анализ на съвместимост
-                          </a>
-                          <p style="margin: 4px 0 0 24px; font-size: 13px; color: #777;">Проверете съвместимостта с партньора си</p>
-                        </td>
-                      </tr>
-                    </table>
+                  <td style="padding: 16px 20px;">
+                    <p style="margin: 0; font-size: 14px; color: #666; line-height: 1.5;">
+                      ⚠️ <strong>Важно:</strong> Ако не сте създали акаунт в Eclyptica, можете спокойно да игнорирате този имейл.
+                    </p>
                   </td>
                 </tr>
               </table>
@@ -151,20 +151,17 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, fullName }: WelcomeEmailRequest = await req.json();
+    const { email, fullName, verificationLink }: VerificationEmailRequest = await req.json();
 
-    console.log(`Sending welcome email to ${email}`);
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-    const appUrl = supabaseUrl.replace('.supabase.co', '.lovable.app');
+    console.log(`Sending verification email to ${email}`);
 
     const emailResponse = await sendResendEmail(
       email,
-      "Добре дошли в Eclyptica! ✨",
-      getWelcomeEmailTemplate(fullName, appUrl)
+      "Потвърдете имейл адреса си - Eclyptica",
+      getVerificationEmailTemplate(fullName, verificationLink)
     );
 
-    console.log("Welcome email sent successfully:", emailResponse);
+    console.log("Verification email sent successfully:", emailResponse);
 
     return new Response(JSON.stringify({ success: true, data: emailResponse }), {
       status: 200,
@@ -174,7 +171,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       },
     });
   } catch (error: any) {
-    console.error("Error in send-welcome-email function:", error);
+    console.error("Error in send-verification-email function:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {
