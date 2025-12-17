@@ -20,11 +20,15 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/update-password`,
+      // Call custom edge function that sends branded email from noreply@eclyptica.com
+      const response = await supabase.functions.invoke('custom-auth-email', {
+        body: {
+          email: email,
+          redirectTo: `${window.location.origin}/auth/update-password`,
+        },
       });
 
-      if (error) throw error;
+      if (response.error) throw response.error;
 
       setEmailSent(true);
       toast({
@@ -34,7 +38,7 @@ const ForgotPassword = () => {
     } catch (error: any) {
       toast({
         title: "Грешка",
-        description: error.message,
+        description: error.message || "Възникна грешка при изпращане на имейла",
         variant: "destructive",
       });
     } finally {

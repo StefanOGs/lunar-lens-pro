@@ -11,3 +11,24 @@ verify_jwt = false
 
 [functions.send-daily-horoscope]
 verify_jwt = false
+
+[functions.geocode-location]
+verify_jwt = false
+
+[functions.generate-compatibility]
+verify_jwt = true
+
+[functions.generate-transits-analysis]
+verify_jwt = true
+
+[functions.delete-user]
+verify_jwt = true
+
+[functions.send-verification-email]
+verify_jwt = false
+
+[functions.send-password-reset-email]
+verify_jwt = false
+
+[functions.custom-auth-email]
+verify_jwt = false
