@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { zodiacSigns, getElementColor, getElementName } from "@/data/zodiacSigns";
 import { ArrowRight } from "lucide-react";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 const ZodiacOverview = () => {
   const navigate = useNavigate();
@@ -46,7 +47,20 @@ const ZodiacOverview = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Зодиакални знаци</h1>

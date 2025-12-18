@@ -7,6 +7,7 @@ import { Sparkles, Moon, Sun, Scissors, Heart, Briefcase, Leaf, Calendar } from 
 import Layout from "@/components/Layout";
 import { format, addDays } from "date-fns";
 import { bg } from "date-fns/locale";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 // Lunar phase calculation based on known new moon reference
 const LUNAR_CYCLE = 29.53058867; // days
@@ -212,7 +213,20 @@ const LunarCalendar = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Header */}
           <div className="text-center space-y-4">
@@ -223,7 +237,7 @@ const LunarCalendar = () => {
           </div>
 
           {/* Current Phase */}
-          <Card className="bg-card/80 backdrop-blur-sm">
+          <Card className="bg-card/60 backdrop-blur-md border-border/50">
             <CardHeader className="text-center pb-2">
               <div className="text-8xl mb-4">{currentPhase.emoji}</div>
               <CardTitle className="text-3xl">{currentPhase.phaseName}</CardTitle>
@@ -234,7 +248,7 @@ const LunarCalendar = () => {
           </Card>
 
           {/* Week View */}
-          <Card className="bg-card/80 backdrop-blur-sm">
+          <Card className="bg-card/60 backdrop-blur-md border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
@@ -262,7 +276,7 @@ const LunarCalendar = () => {
           </Card>
 
           {/* Upcoming Phases */}
-          <Card className="bg-card/80 backdrop-blur-sm">
+          <Card className="bg-card/60 backdrop-blur-md border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Moon className="w-5 h-5" />
@@ -291,7 +305,7 @@ const LunarCalendar = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {recommendations.map((rec, index) => (
-                <Card key={index} className="bg-card/80 backdrop-blur-sm">
+                <Card key={index} className="bg-card/60 backdrop-blur-md border-border/50">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center gap-2">
                       {rec.icon}

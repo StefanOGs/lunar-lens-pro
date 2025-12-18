@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 const About = () => {
   const navigate = useNavigate();
@@ -51,7 +52,20 @@ const About = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-12">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <div className="w-20 h-20 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto">
@@ -63,7 +77,7 @@ const About = () => {
             </p>
           </div>
 
-          <Card className="bg-card/80 backdrop-blur-sm">
+          <Card className="bg-card/60 backdrop-blur-md border-border/50">
             <CardHeader>
               <CardTitle>Нашата мисия</CardTitle>
             </CardHeader>
@@ -82,7 +96,7 @@ const About = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/80 backdrop-blur-sm">
+          <Card className="bg-card/60 backdrop-blur-md border-border/50">
             <CardHeader>
               <CardTitle>Нашите ценности</CardTitle>
             </CardHeader>

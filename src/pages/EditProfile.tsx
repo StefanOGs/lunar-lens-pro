@@ -7,6 +7,7 @@ import { Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import ProfileSetup from "@/components/ProfileSetup";
 import { useToast } from "@/hooks/use-toast";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -81,9 +82,22 @@ const EditProfile = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <Card className="bg-card/80 backdrop-blur-sm">
+          <Card className="bg-card/60 backdrop-blur-md border-border/50">
             <CardHeader className="text-center">
               <div className="w-16 h-16 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-8 h-8 text-primary-foreground" />

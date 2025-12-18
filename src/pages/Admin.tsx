@@ -18,6 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 interface UserData {
   id: string;
@@ -183,7 +184,21 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen relative">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex justify-between items-center">
           <div>
@@ -195,7 +210,7 @@ const Admin = () => {
           </Button>
         </div>
 
-        <Card>
+        <Card className="bg-card/60 backdrop-blur-md border-border/50">
           <CardHeader>
             <CardTitle>Регистрирани потребители</CardTitle>
             <CardDescription>
@@ -281,6 +296,7 @@ const Admin = () => {
             )}
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );
