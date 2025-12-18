@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserIcon, Settings, ArrowLeft, Menu } from "lucide-react";
+import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { User } from "@supabase/supabase-js";
@@ -55,6 +55,12 @@ const Layout = ({ children, user }: LayoutProps) => {
               </Button>
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/about">За нас</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild className="text-amber-500 hover:text-amber-400">
+                <Link to="/plans">
+                  <Crown className="w-4 h-4 mr-1" />
+                  Планове
+                </Link>
               </Button>
             </nav>
           </div>
@@ -123,6 +129,17 @@ const Layout = ({ children, user }: LayoutProps) => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Link to="/about">За нас</Link>
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-amber-500" 
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link to="/plans">
+                      <Crown className="w-4 h-4 mr-2" />
+                      Планове
+                    </Link>
                   </Button>
                 </nav>
 

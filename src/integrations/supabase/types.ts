@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      one_time_purchases: {
+        Row: {
+          credits_remaining: number
+          id: string
+          product_type: string
+          purchased_at: string
+          user_id: string
+        }
+        Insert: {
+          credits_remaining?: number
+          id?: string
+          product_type: string
+          purchased_at?: string
+          user_id: string
+        }
+        Update: {
+          credits_remaining?: number
+          id?: string
+          product_type?: string
+          purchased_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           birth_date: string
@@ -86,6 +110,33 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          created_at: string
+          id: string
+          plan: Database["public"]["Enums"]["subscription_plan"]
+          plan_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          plan_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          plan_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -122,6 +173,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      subscription_plan: "FREE" | "BASIC" | "PREMIUM" | "LIFETIME"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -250,6 +302,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      subscription_plan: ["FREE", "BASIC", "PREMIUM", "LIFETIME"],
     },
   },
 } as const
