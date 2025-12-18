@@ -143,7 +143,7 @@ const NatalChart = () => {
       
       toast({
         title: "Готово!",
-        description: "Вашата натална карта е генерирана успешно.",
+        description: "Вашата натална карта е изчислена успешно.",
       });
     } catch (error: any) {
       console.error('Error generating natal chart:', error);
@@ -189,7 +189,7 @@ const NatalChart = () => {
               </div>
               <CardTitle className="text-2xl">Натална карта</CardTitle>
               <CardDescription>
-                Въведете вашите данни за раждане, за да генерирате вашата натална карта
+                Въведете вашите данни за раждане, за да проверите вашата натална карта
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -262,10 +262,10 @@ const NatalChart = () => {
                   {generating ? (
                     <>
                       <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                      Генериране...
+                      Проверка...
                     </>
                   ) : (
-                    "Генерирай карта"
+                    "Провери карта"
                   )}
                 </Button>
               </form>
