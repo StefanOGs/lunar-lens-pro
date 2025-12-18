@@ -17,6 +17,7 @@ import About from "./pages/About";
 import NatalChart from "./pages/NatalChart";
 import LunarCalendar from "./pages/LunarCalendar";
 import TransitsProgressions from "./pages/TransitsProgressions";
+import PersonalForecast from "./pages/PersonalForecast";
 import ZodiacOverview from "./pages/ZodiacOverview";
 import ZodiacDetails from "./pages/ZodiacDetails";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/compatibility" element={<Compatibility />} />
           <Route path="/lunar-calendar" element={<LunarCalendar />} />
           <Route path="/transits-progressions" element={<TransitsProgressions />} />
+          <Route path="/personal-forecast" element={<PersonalForecast />} />
           <Route path="/zodiac" element={<ZodiacOverview />} />
           <Route path="/zodiac/:sign" element={<ZodiacDetails />} />
           <Route path="/edit-profile" element={<EditProfile />} />

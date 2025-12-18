@@ -50,6 +50,8 @@ const Services = () => {
       navigate("/lunar-calendar");
     } else if (serviceName === "Транзити и прогреси") {
       navigate("/transits-progressions");
+    } else if (serviceName === "Персонални прогнози") {
+      navigate("/personal-forecast");
     } else {
       setSelectedService(serviceName);
       setUpgradeDialogOpen(true);
