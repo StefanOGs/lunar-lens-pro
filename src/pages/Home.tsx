@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, Star, Heart, Moon, Sun, MapPin, Calendar, Clock } from "lucide-react";
+import { Sparkles, Star, Heart, Moon, Sun, MapPin, Calendar, Clock, Wand2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import cosmicBg from "@/assets/cosmic-bg.jpg";
@@ -170,7 +170,19 @@ const Home = () => {
           </Card>
 
           {/* Quick Links */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <Link to="/personal-forecast" className="group">
+              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-accent/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
+                <CardHeader className="text-center p-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/30 to-primary/30 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <Wand2 className="w-6 h-6 text-accent" />
+                  </div>
+                  <CardTitle className="text-sm">Прогноза</CardTitle>
+                  <CardDescription className="text-xs">Персонална</CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
             <Link to="/horoscopes" className="group">
               <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-primary/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
@@ -178,7 +190,7 @@ const Home = () => {
                     <Sparkles className="w-6 h-6 text-primary" />
                   </div>
                   <CardTitle className="text-sm">Хороскопи</CardTitle>
-                  <CardDescription className="text-xs">Ежедневни прогнози</CardDescription>
+                  <CardDescription className="text-xs">Ежедневни</CardDescription>
                 </CardHeader>
               </Card>
             </Link>
@@ -219,7 +231,7 @@ const Home = () => {
               </Card>
             </Link>
 
-            <Link to="/lunar-calendar" className="group col-span-2 md:col-span-1">
+            <Link to="/lunar-calendar" className="group">
               <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-muted-foreground/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-muted/40 to-primary/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">

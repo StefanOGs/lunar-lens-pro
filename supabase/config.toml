@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.custom-auth-email]
 verify_jwt = false
+
+[functions.generate-personal-forecast]
+verify_jwt = true
