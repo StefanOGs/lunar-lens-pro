@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export type SubscriptionPlan = 'FREE' | 'BASIC' | 'PREMIUM' | 'LIFETIME';
+export type AppRole = 'admin' | 'user';
 
 interface Subscription {
   plan: SubscriptionPlan;
@@ -58,6 +59,8 @@ export const useSubscription = (userId: string | null) => {
     planExpiresAt: null,
   });
   const [oneTimePurchases, setOneTimePurchases] = useState<OneTimePurchase[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [roles, setRoles] = useState<AppRole[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,8 +69,22 @@ export const useSubscription = (userId: string | null) => {
       return;
     }
 
-    const fetchSubscription = async () => {
+    const fetchSubscriptionAndRoles = async () => {
       try {
+        // Fetch user roles
+        const { data: rolesData, error: rolesError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId);
+
+        if (rolesError) throw rolesError;
+
+        if (rolesData) {
+          const userRoles = rolesData.map((r) => r.role as AppRole);
+          setRoles(userRoles);
+          setIsAdmin(userRoles.includes('admin'));
+        }
+
         // Fetch subscription
         const { data: subData, error: subError } = await supabase
           .from('subscriptions')
@@ -120,7 +137,7 @@ export const useSubscription = (userId: string | null) => {
       }
     };
 
-    fetchSubscription();
+    fetchSubscriptionAndRoles();
   }, [userId]);
 
   const getActivePlan = (): SubscriptionPlan => {
@@ -128,6 +145,8 @@ export const useSubscription = (userId: string | null) => {
   };
 
   const hasFeature = (feature: keyof FeatureAccess): boolean => {
+    // Admins have access to all features
+    if (isAdmin) return true;
     return FEATURE_MATRIX[subscription.plan][feature];
   };
 
@@ -138,12 +157,17 @@ export const useSubscription = (userId: string | null) => {
   };
 
   const canAccessFeature = (feature: keyof FeatureAccess, productType?: 'forecast' | 'compatibility'): boolean => {
+    // Admins have access to all features
+    if (isAdmin) return true;
     if (hasFeature(feature)) return true;
     if (productType && hasOneTimeCredit(productType)) return true;
     return false;
   };
 
   const useOneTimeCredit = async (productType: 'forecast' | 'compatibility'): Promise<boolean> => {
+    // Admins don't need to use credits
+    if (isAdmin) return true;
+
     const purchase = oneTimePurchases.find(
       (p) => p.productType === productType && p.creditsRemaining > 0
     );
@@ -176,6 +200,8 @@ export const useSubscription = (userId: string | null) => {
   return {
     subscription,
     oneTimePurchases,
+    isAdmin,
+    roles,
     loading,
     getActivePlan,
     hasFeature,
