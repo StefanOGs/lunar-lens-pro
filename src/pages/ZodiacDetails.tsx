@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { zodiacSigns, getSignById, getElementColor, getElementName } from "@/data/zodiacSigns";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 const ZodiacDetails = () => {
   const navigate = useNavigate();
@@ -71,7 +72,20 @@ const ZodiacDetails = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Back Button */}
         <Button variant="ghost" asChild className="mb-6">
           <Link to="/zodiac">

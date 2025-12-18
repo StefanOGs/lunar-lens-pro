@@ -5,6 +5,7 @@ import { User } from "@supabase/supabase-js";
 import { Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import HoroscopeDisplay from "@/components/HoroscopeDisplay";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 const Horoscopes = () => {
   const navigate = useNavigate();
@@ -72,7 +73,20 @@ const Horoscopes = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <HoroscopeDisplay profile={profile} />
         </div>

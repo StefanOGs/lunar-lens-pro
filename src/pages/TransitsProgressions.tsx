@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Calendar, TrendingUp, AlertCircle, Clock, Star, ArrowRight, Loader2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { toast } from "sonner";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 interface PlanetPosition {
   planet: string;
@@ -231,7 +232,20 @@ const TransitsProgressions = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Header */}
           <div className="text-center space-y-4">

@@ -11,6 +11,7 @@ import { Heart, Sparkles, Loader2, Info, MessageCircle, Flame, Target, Clock, Tr
 import Layout from "@/components/Layout";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import { toast } from "sonner";
+import cosmicBg from "@/assets/cosmic-bg.jpg";
 
 interface PersonData {
   name: string;
@@ -241,7 +242,20 @@ const Compatibility = () => {
 
   return (
     <Layout user={user}>
-      <div className="container mx-auto px-4 py-8">
+      {/* Full page cosmic background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cosmicBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-4">
             <Heart className="w-16 h-16 text-primary mx-auto" />
