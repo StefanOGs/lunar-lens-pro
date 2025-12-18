@@ -285,7 +285,7 @@ const TransitsProgressions = () => {
                   <TrendingUp className="w-16 h-16 text-primary mx-auto" />
                   <h2 className="text-2xl font-semibold">Персонализиран анализ</h2>
                   <p className="text-muted-foreground max-w-md mx-auto">
-                    Генерирайте персонализиран анализ на транзитите и прогресиите въз основа на вашата натална карта
+                    Проверете персонализиран анализ на транзитите и прогресиите въз основа на вашата натална карта
                   </p>
                   <Button 
                     size="lg" 
@@ -300,7 +300,7 @@ const TransitsProgressions = () => {
                     ) : (
                       <>
                         <Sparkles className="w-5 h-5 mr-2" />
-                        Генерирай анализ
+                        Провери анализ
                       </>
                     )}
                   </Button>

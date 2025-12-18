@@ -237,12 +237,12 @@ const PersonalForecast = () => {
                     {generating ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />
-                        Генериране...
+                        Проверка...
                       </>
                     ) : (
                       <>
                         <Sparkles className="w-4 h-4" />
-                        Генерирай прогноза
+                        Провери прогноза
                       </>
                     )}
                   </Button>
@@ -263,12 +263,12 @@ const PersonalForecast = () => {
                       {generating ? (
                         <>
                           <RefreshCw className="w-4 h-4 animate-spin" />
-                          Генериране...
+                          Проверка...
                         </>
                       ) : (
                         <>
                           <RefreshCw className="w-4 h-4" />
-                          Генерирай нова прогноза
+                          Провери нова прогноза
                         </>
                       )}
                     </Button>
