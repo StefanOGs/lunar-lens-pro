@@ -4,19 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, RefreshCw, Moon, Calendar } from "lucide-react";
+import { Sparkles, RefreshCw, Moon, Calendar, Lock, Crown } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import cosmicBg from "@/assets/cosmic-bg.jpg";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const PersonalForecast = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [forecast, setForecast] = useState<string | null>(null);
+
+  const { canAccessFeature, loading: subscriptionLoading, getActivePlan } = useSubscription(userId);
 
   useEffect(() => {
     checkUser();
@@ -26,6 +30,7 @@ const PersonalForecast = () => {
         navigate("/auth");
       } else {
         setUser(session.user);
+        setUserId(session.user.id);
         loadProfile(session.user.id);
       }
     });
@@ -42,9 +47,12 @@ const PersonalForecast = () => {
     }
     
     setUser(session.user);
+    setUserId(session.user.id);
     await loadProfile(session.user.id);
     setLoading(false);
   };
+
+  const hasAccess = canAccessFeature('personalizedForecast', 'forecast');
 
   const loadProfile = async (userId: string) => {
     const { data, error } = await supabase
@@ -153,7 +161,7 @@ const PersonalForecast = () => {
     });
   };
 
-  if (loading) {
+  if (loading || subscriptionLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -161,6 +169,50 @@ const PersonalForecast = () => {
           <p className="text-muted-foreground">Зареждане...</p>
         </div>
       </div>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <Layout user={user}>
+        <div 
+          className="fixed inset-0 z-0"
+          style={{
+            backgroundImage: `url(${cosmicBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 py-8">
+          <div className="max-w-lg mx-auto">
+            <Card className="bg-card/80 backdrop-blur-sm border-primary/20">
+              <CardContent className="pt-8 pb-8 text-center space-y-6">
+                <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto">
+                  <Lock className="w-10 h-10 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold">Достъпът е ограничен</h2>
+                  <p className="text-muted-foreground">
+                    Функцията "Персонална прогноза" е достъпна за потребители с план BASIC или по-висок, 
+                    или с еднократна покупка.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Текущ план: <span className="font-semibold text-primary">{getActivePlan()}</span>
+                  </p>
+                </div>
+                <Button onClick={() => navigate('/plans')} className="gap-2">
+                  <Crown className="w-4 h-4" />
+                  Вижте плановете
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </Layout>
     );
   }
 

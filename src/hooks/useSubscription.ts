@@ -19,6 +19,7 @@ interface FeatureAccess {
   fullNatalChart: boolean;
   compatibility: boolean;
   personalizedForecast: boolean;
+  transitsProgressions: boolean;
   dailyEmails: boolean;
 }
 
@@ -28,6 +29,7 @@ const FEATURE_MATRIX: Record<SubscriptionPlan, FeatureAccess> = {
     fullNatalChart: false,
     compatibility: false,
     personalizedForecast: false,
+    transitsProgressions: false,
     dailyEmails: false,
   },
   BASIC: {
@@ -35,6 +37,7 @@ const FEATURE_MATRIX: Record<SubscriptionPlan, FeatureAccess> = {
     fullNatalChart: true,
     compatibility: true,
     personalizedForecast: true,
+    transitsProgressions: true,
     dailyEmails: false,
   },
   PREMIUM: {
@@ -42,6 +45,7 @@ const FEATURE_MATRIX: Record<SubscriptionPlan, FeatureAccess> = {
     fullNatalChart: true,
     compatibility: true,
     personalizedForecast: true,
+    transitsProgressions: true,
     dailyEmails: true,
   },
   LIFETIME: {
@@ -49,6 +53,7 @@ const FEATURE_MATRIX: Record<SubscriptionPlan, FeatureAccess> = {
     fullNatalChart: true,
     compatibility: true,
     personalizedForecast: true,
+    transitsProgressions: true,
     dailyEmails: true,
   },
 };

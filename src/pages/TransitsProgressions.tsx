@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Calendar, TrendingUp, AlertCircle, Clock, Star, ArrowRight, Loader2 } from "lucide-react";
+import { Sparkles, Calendar, TrendingUp, AlertCircle, Clock, Star, ArrowRight, Loader2, Lock, Crown } from "lucide-react";
 import Layout from "@/components/Layout";
 import { toast } from "sonner";
 import cosmicBg from "@/assets/cosmic-bg.jpg";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface PlanetPosition {
   planet: string;
@@ -109,11 +110,14 @@ const calculateAspect = (degree1: number, sign1: string, degree2: number, sign2:
 const TransitsProgressions = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [analysis, setAnalysis] = useState<TransitAnalysis | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+
+  const { canAccessFeature, loading: subscriptionLoading, getActivePlan } = useSubscription(userId);
 
   useEffect(() => {
     checkUser();
@@ -123,6 +127,7 @@ const TransitsProgressions = () => {
         navigate("/auth");
       } else {
         setUser(session.user);
+        setUserId(session.user.id);
       }
     });
 
@@ -138,9 +143,12 @@ const TransitsProgressions = () => {
     }
     
     setUser(session.user);
+    setUserId(session.user.id);
     await loadUserProfile(session.user.id);
     setLoading(false);
   };
+
+  const hasAccess = canAccessFeature('transitsProgressions');
 
   const loadUserProfile = async (userId: string) => {
     try {
@@ -217,7 +225,7 @@ const TransitsProgressions = () => {
     }
   };
 
-  if (loading) {
+  if (loading || subscriptionLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-cosmic">
         <div className="text-center">
@@ -225,6 +233,49 @@ const TransitsProgressions = () => {
           <p className="text-muted-foreground">Зареждане...</p>
         </div>
       </div>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <Layout user={user}>
+        <div 
+          className="fixed inset-0 z-0"
+          style={{
+            backgroundImage: `url(${cosmicBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 py-8">
+          <div className="max-w-lg mx-auto">
+            <Card className="bg-card/80 backdrop-blur-sm border-primary/20">
+              <CardContent className="pt-8 pb-8 text-center space-y-6">
+                <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto">
+                  <Lock className="w-10 h-10 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold">Достъпът е ограничен</h2>
+                  <p className="text-muted-foreground">
+                    Функцията "Транзити и прогреси" е достъпна за потребители с план BASIC или по-висок.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Текущ план: <span className="font-semibold text-primary">{getActivePlan()}</span>
+                  </p>
+                </div>
+                <Button onClick={() => navigate('/plans')} className="gap-2">
+                  <Crown className="w-4 h-4" />
+                  Вижте плановете
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </Layout>
     );
   }
 
