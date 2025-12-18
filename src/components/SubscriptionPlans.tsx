@@ -1,53 +1,66 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Check, X, Crown, Star, Sparkles, Infinity } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const plans = [
   {
-    name: "Лунен",
-    price: "19",
-    period: "месец",
-    description: "Идеален за начинаещи",
+    name: "Безплатен",
+    price: "0",
+    period: null,
+    description: "За запознаване с услугата",
+    icon: Star,
     features: [
-      "Седмични хороскопи",
-      "Месечни прогнози",
-      "Лунен календар",
-      "Email поддръжка"
+      { name: "Общ дневен хороскоп", included: true },
+      { name: "Базова натална карта", included: true },
+      { name: "Персонализирани прогнози", included: false },
+      { name: "Съвместимост", included: false },
     ],
-    popular: false
+    popular: false,
   },
   {
-    name: "Звезден",
-    price: "39",
+    name: "Basic",
+    price: "5.99",
     period: "месец",
-    description: "Най-популярен избор",
+    description: "Достъп до всички услуги",
+    icon: Sparkles,
     features: [
-      "Всичко от Лунен",
-      "Персонализирани съвети",
-      "Достъп до медитации",
-      "Месечни ритуали",
-      "AI Астролог (10 въпроса)",
-      "Приоритетна поддръжка"
+      { name: "Пълна натална карта", included: true },
+      { name: "Персонализирани прогнози", included: true },
+      { name: "Съвместимост", included: true },
+      { name: "Ежедневни email насоки", included: false },
     ],
-    popular: true
+    popular: true,
   },
   {
-    name: "Космически",
-    price: "69",
+    name: "Premium",
+    price: "12.99",
     period: "месец",
-    description: "Пълна астрологична еволюция",
+    description: "Личен астролог",
+    icon: Crown,
     features: [
-      "Всичко от Звезден",
-      "Неограничен AI Астролог",
-      "Видео анализи",
-      "1-на-1 консултации (месечно)",
-      "Ексклузивни прогнози",
-      "VIP общност",
-      "Ранен достъп до нови функции"
+      { name: "Всичко от Basic", included: true },
+      { name: "Ежедневни персонални прогнози", included: true },
+      { name: "Email насоки", included: true },
+      { name: "По-дълбоки интерпретации", included: true },
     ],
-    popular: false
-  }
+    popular: false,
+  },
+  {
+    name: "Lifetime",
+    price: "79.99",
+    oneTime: true,
+    description: "Завинаги Premium",
+    icon: Infinity,
+    features: [
+      { name: "Всичко от Premium", included: true },
+      { name: "Без изтичане", included: true },
+      { name: "Без бъдещи такси", included: true },
+      { name: "Приоритетна поддръжка", included: true },
+    ],
+    popular: false,
+  },
 ];
 
 export const SubscriptionPlans = () => {
@@ -61,61 +74,74 @@ export const SubscriptionPlans = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <Card 
-              key={index}
-              className={`flex flex-col relative ${
-                plan.popular 
-                  ? 'shadow-glow border-primary scale-105 bg-gradient-to-b from-primary/5 to-card' 
-                  : 'hover:shadow-card bg-card/50'
-              } transition-all duration-300`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-gradient-gold text-background px-4 py-1 shadow-lg">
-                    Най-популярен
-                  </Badge>
-                </div>
-              )}
-              
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-2xl mb-2">{plan.name}</CardTitle>
-                <CardDescription className="text-base">
-                  {plan.description}
-                </CardDescription>
-                <div className="pt-4">
-                  <span className="text-5xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground ml-2">лв/{plan.period}</span>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="flex-1">
-                <ul className="space-y-3">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <div className={`mt-1 rounded-full p-1 ${
-                        plan.popular ? 'bg-primary' : 'bg-muted'
-                      }`}>
-                        <Check className="w-3 h-3 text-primary-foreground" />
-                      </div>
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              
-              <CardFooter className="pt-6">
-                <Button 
-                  className="w-full" 
-                  size="lg"
-                  variant={plan.popular ? "default" : "outline"}
-                >
-                  Започнете Сега
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {plans.map((plan, index) => {
+            const Icon = plan.icon;
+            return (
+              <Card 
+                key={index}
+                className={`flex flex-col relative ${
+                  plan.popular 
+                    ? 'shadow-glow border-primary scale-105 bg-gradient-to-b from-primary/5 to-card' 
+                    : 'hover:shadow-card bg-card/50'
+                } transition-all duration-300`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-1 shadow-lg">
+                      Най-популярен
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <div className={`w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center ${
+                    plan.popular ? 'bg-primary/20' : 'bg-muted'
+                  }`}>
+                    <Icon className={`w-6 h-6 ${plan.popular ? 'text-primary' : 'text-muted-foreground'}`} />
+                  </div>
+                  <CardTitle className="text-xl">{plan.name}</CardTitle>
+                  <CardDescription className="text-sm">
+                    {plan.description}
+                  </CardDescription>
+                  <div className="pt-2">
+                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className="text-muted-foreground ml-1 text-sm">
+                      лв{plan.period ? `/${plan.period}` : plan.oneTime ? ' еднократно' : ''}
+                    </span>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="flex-1">
+                  <ul className="space-y-2">
+                    {plan.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center gap-2">
+                        {feature.included ? (
+                          <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                        ) : (
+                          <X className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        )}
+                        <span className={`text-sm ${!feature.included ? 'text-muted-foreground' : ''}`}>
+                          {feature.name}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                
+                <CardFooter className="pt-4">
+                  <Button 
+                    className="w-full" 
+                    size="default"
+                    variant={plan.popular ? "default" : "outline"}
+                    asChild
+                  >
+                    <Link to="/auth">Започнете Сега</Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
         
         <div className="text-center mt-12">

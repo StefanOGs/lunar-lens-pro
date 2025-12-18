@@ -20,6 +20,7 @@ import TransitsProgressions from "./pages/TransitsProgressions";
 import PersonalForecast from "./pages/PersonalForecast";
 import ZodiacOverview from "./pages/ZodiacOverview";
 import ZodiacDetails from "./pages/ZodiacDetails";
+import Plans from "./pages/Plans";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/zodiac" element={<ZodiacOverview />} />
           <Route path="/zodiac/:sign" element={<ZodiacDetails />} />
           <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/plans" element={<Plans />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
