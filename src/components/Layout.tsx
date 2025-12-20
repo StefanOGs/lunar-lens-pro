@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown, FileText } from "lucide-react";
+import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown, FileText, Home, Sparkles, Sun, Star, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { User } from "@supabase/supabase-js";
@@ -40,29 +40,44 @@ const Layout = ({ children, user }: LayoutProps) => {
             </Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-2">
+            <nav className="hidden md:flex items-center gap-1">
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/home">Начало</Link>
+                <Link to="/home">
+                  <Home className="w-4 h-4 mr-1" />
+                  Начало
+                </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/horoscopes">Моите хороскопи</Link>
+                <Link to="/horoscopes">
+                  <Sparkles className="w-4 h-4 mr-1" />
+                  Моите хороскопи
+                </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/zodiac">Зодии</Link>
+                <Link to="/zodiac">
+                  <Sun className="w-4 h-4 mr-1" />
+                  Зодии
+                </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/services">Услуги</Link>
+                <Link to="/services">
+                  <Star className="w-4 h-4 mr-1" />
+                  Услуги
+                </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/about">За нас</Link>
+                <Link to="/about">
+                  <Info className="w-4 h-4 mr-1" />
+                  За нас
+                </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild className="text-violet-400 hover:text-violet-300">
+              <Button variant="ghost" size="sm" asChild>
                 <Link to="/reports">
                   <FileText className="w-4 h-4 mr-1" />
                   Доклади
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild className="text-amber-500 hover:text-amber-400">
+              <Button variant="ghost" size="sm" asChild>
                 <Link to="/plans">
                   <Crown className="w-4 h-4 mr-1" />
                   Планове
@@ -110,7 +125,10 @@ const Layout = ({ children, user }: LayoutProps) => {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link to="/home">Начало</Link>
+                    <Link to="/home">
+                      <Home className="w-4 h-4 mr-2" />
+                      Начало
+                    </Link>
                   </Button>
                   <Button 
                     variant="ghost" 
@@ -118,7 +136,10 @@ const Layout = ({ children, user }: LayoutProps) => {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link to="/horoscopes">Моите хороскопи</Link>
+                    <Link to="/horoscopes">
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Моите хороскопи
+                    </Link>
                   </Button>
                   <Button 
                     variant="ghost" 
@@ -126,7 +147,10 @@ const Layout = ({ children, user }: LayoutProps) => {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link to="/services">Услуги</Link>
+                    <Link to="/services">
+                      <Star className="w-4 h-4 mr-2" />
+                      Услуги
+                    </Link>
                   </Button>
                   <Button 
                     variant="ghost" 
@@ -134,11 +158,14 @@ const Layout = ({ children, user }: LayoutProps) => {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link to="/about">За нас</Link>
+                    <Link to="/about">
+                      <Info className="w-4 h-4 mr-2" />
+                      За нас
+                    </Link>
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start text-violet-400" 
+                    className="w-full justify-start" 
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -149,7 +176,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start text-amber-500" 
+                    className="w-full justify-start" 
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
