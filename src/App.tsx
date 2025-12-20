@@ -21,6 +21,7 @@ import PersonalForecast from "./pages/PersonalForecast";
 import ZodiacOverview from "./pages/ZodiacOverview";
 import ZodiacDetails from "./pages/ZodiacDetails";
 import Plans from "./pages/Plans";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/zodiac/:sign" element={<ZodiacDetails />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/plans" element={<Plans />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
