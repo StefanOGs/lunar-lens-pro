@@ -41,43 +41,43 @@ const Layout = ({ children, user }: LayoutProps) => {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1">
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/home" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/home">
                   <Home className="w-4 h-4 mr-1" />
                   Начало
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/horoscopes" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/horoscopes">
                   <Sparkles className="w-4 h-4 mr-1" />
                   Моите хороскопи
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/zodiac" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/zodiac">
                   <Sun className="w-4 h-4 mr-1" />
                   Зодии
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/services" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/services">
                   <Star className="w-4 h-4 mr-1" />
                   Услуги
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/about" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/about">
                   <Info className="w-4 h-4 mr-1" />
                   За нас
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/reports" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/reports">
                   <FileText className="w-4 h-4 mr-1" />
                   Доклади
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className={location.pathname === "/plans" ? "border-b-2 border-primary rounded-none" : ""}>
                 <Link to="/plans">
                   <Crown className="w-4 h-4 mr-1" />
                   Планове
@@ -121,7 +121,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                 <nav className="flex flex-col gap-2">
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start" 
+                    className={`w-full justify-start ${location.pathname === "/home" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -132,7 +132,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start" 
+                    className={`w-full justify-start ${location.pathname === "/horoscopes" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -143,7 +143,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start" 
+                    className={`w-full justify-start ${location.pathname === "/services" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -154,7 +154,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start" 
+                    className={`w-full justify-start ${location.pathname === "/about" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -165,7 +165,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start" 
+                    className={`w-full justify-start ${location.pathname === "/reports" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -176,7 +176,7 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start" 
+                    className={`w-full justify-start ${location.pathname === "/plans" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
