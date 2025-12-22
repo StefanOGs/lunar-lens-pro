@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -12,6 +14,19 @@ const APP_URL = "https://eclyptica.com";
 
 // Cosmic header image (royalty-free space/stars image)
 const HEADER_IMAGE = "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=600&h=200&fit=crop&q=80";
+
+// Validate email format
+function validateEmail(email: string): boolean {
+  if (!email || typeof email !== 'string') return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 255;
+}
+
+// Sanitize name (remove special characters, limit length)
+function sanitizeName(name: string): string {
+  if (!name || typeof name !== 'string') return 'Приятел';
+  return name.replace(/[^a-zA-Zа-яА-ЯёЁ\s-]/g, '').trim().slice(0, 100) || 'Приятел';
+}
 
 const getWelcomeEmailTemplate = (fullName: string) => `
 <!DOCTYPE html>
@@ -240,14 +255,57 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Verify service role key for internal calls only
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Verify the caller is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { email, fullName }: WelcomeEmailRequest = await req.json();
+
+    // Validate email
+    if (!validateEmail(email)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid email address' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Verify the user is sending email to themselves (prevent spam abuse)
+    if (user.email !== email) {
+      console.error('User attempted to send email to different address:', email, 'vs', user.email);
+      return new Response(
+        JSON.stringify({ error: 'Can only send welcome email to your own address' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Sanitize name
+    const sanitizedName = sanitizeName(fullName);
 
     console.log(`Sending welcome email to ${email}`);
 
     const emailResponse = await sendResendEmail(
       email,
       "Добре дошли в Eclyptica! ✨",
-      getWelcomeEmailTemplate(fullName)
+      getWelcomeEmailTemplate(sanitizedName)
     );
 
     console.log("Welcome email sent successfully:", emailResponse);
