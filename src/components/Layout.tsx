@@ -218,12 +218,12 @@ const Layout = ({ children, user }: LayoutProps) => {
 
       <main className="flex-1 relative">
         {showBackButton && (
-          <div className="container mx-auto px-4 pt-4">
+          <div className="container mx-auto px-4 pt-4 relative z-20">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={handleGoBack}
-              className="gap-2 text-muted-foreground hover:text-foreground"
+              className="gap-2 text-muted-foreground hover:text-foreground bg-card/60 backdrop-blur-sm border border-border/50"
             >
               <ArrowLeft className="w-4 h-4" />
               Назад
