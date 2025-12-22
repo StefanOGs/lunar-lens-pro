@@ -126,8 +126,8 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <Star className="w-4 h-4 text-accent" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Star className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Зодия</p>
@@ -135,8 +135,8 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-secondary/10">
-                    <Calendar className="w-4 h-4 text-secondary" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Calendar className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Дата на раждане</p>
@@ -156,8 +156,8 @@ const Home = () => {
                 </div>
                 {profile.birth_place && (
                   <div className="flex items-start gap-3 md:col-span-2">
-                    <div className="p-2 rounded-lg bg-accent/10">
-                      <MapPin className="w-4 h-4 text-accent" />
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <MapPin className="w-4 h-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Място на раждане</p>
@@ -172,10 +172,10 @@ const Home = () => {
           {/* Quick Links */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <Link to="/personal-forecast" className="group">
-              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-accent/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
+              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-primary/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/30 to-primary/30 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                    <Wand2 className="w-6 h-6 text-accent" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <Wand2 className="w-6 h-6 text-primary" />
                   </div>
                   <CardTitle className="text-sm">Прогноза</CardTitle>
                   <CardDescription className="text-xs">Персонална</CardDescription>
@@ -196,10 +196,10 @@ const Home = () => {
             </Link>
 
             <Link to="/zodiac" className="group">
-              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-secondary/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
+              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-primary/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-secondary/20 to-primary/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                    <Sun className="w-6 h-6 text-secondary" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <Sun className="w-6 h-6 text-primary" />
                   </div>
                   <CardTitle className="text-sm">Зодии</CardTitle>
                   <CardDescription className="text-xs">12 знака</CardDescription>
@@ -208,10 +208,10 @@ const Home = () => {
             </Link>
 
             <Link to="/services" className="group">
-              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-accent/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
+              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-primary/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                    <Star className="w-6 h-6 text-accent" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <Star className="w-6 h-6 text-primary" />
                   </div>
                   <CardTitle className="text-sm">Услуги</CardTitle>
                   <CardDescription className="text-xs">Анализи</CardDescription>
@@ -220,10 +220,10 @@ const Home = () => {
             </Link>
 
             <Link to="/compatibility" className="group">
-              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-destructive/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
+              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-accent/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-destructive/20 to-accent/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                    <Heart className="w-6 h-6 text-destructive" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <Heart className="w-6 h-6 text-accent" />
                   </div>
                   <CardTitle className="text-sm">Съвместимост</CardTitle>
                   <CardDescription className="text-xs">Любов</CardDescription>
@@ -232,10 +232,10 @@ const Home = () => {
             </Link>
 
             <Link to="/lunar-calendar" className="group">
-              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-muted-foreground/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
+              <Card className="bg-card/60 backdrop-blur-md border-border/50 hover:border-accent/50 hover:shadow-glow transition-all duration-300 h-full group-hover:scale-[1.02]">
                 <CardHeader className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-muted/40 to-primary/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                    <Moon className="w-6 h-6 text-foreground" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <Moon className="w-6 h-6 text-accent" />
                   </div>
                   <CardTitle className="text-sm">Лунен календар</CardTitle>
                   <CardDescription className="text-xs">Фази</CardDescription>
