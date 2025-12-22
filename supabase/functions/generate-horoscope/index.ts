@@ -7,6 +7,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Valid zodiac signs in Bulgarian
+const validZodiacSigns = [
+  'Овен', 'Телец', 'Близнаци', 'Рак', 'Лъв', 'Дева',
+  'Везни', 'Скорпион', 'Стрелец', 'Козирог', 'Водолей', 'Риби'
+];
+
+const validHoroscopeTypes = ['daily', 'weekly', 'monthly', 'yearly'];
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -15,8 +23,28 @@ serve(async (req) => {
   try {
     const { type = 'daily', zodiacSign } = await req.json();
     
-    if (!zodiacSign) {
-      throw new Error('Zodiac sign is required');
+    // Input validation
+    if (!zodiacSign || typeof zodiacSign !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Zodiac sign is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!validZodiacSigns.includes(zodiacSign)) {
+      console.error('Invalid zodiac sign attempted:', zodiacSign);
+      return new Response(
+        JSON.stringify({ error: 'Invalid zodiac sign' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!validHoroscopeTypes.includes(type)) {
+      console.error('Invalid horoscope type attempted:', type);
+      return new Response(
+        JSON.stringify({ error: 'Invalid horoscope type' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     console.log(`Generating ${type} horoscope for ${zodiacSign}`);
@@ -29,7 +57,10 @@ serve(async (req) => {
     // Get auth header from request
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('No authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Initialize Supabase client
@@ -42,7 +73,10 @@ serve(async (req) => {
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
     
     if (userError || !user) {
-      throw new Error('Invalid auth token');
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Check if we have a cached horoscope for today

@@ -2,6 +2,13 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
+// Sanitize location query (limit length, basic sanitization)
+function sanitizeLocationQuery(query: string): string {
+  if (!query || typeof query !== 'string') return '';
+  // Allow alphanumeric, Cyrillic, spaces, commas, periods, and hyphens
+  return query.replace(/[^a-zA-Zа-яА-ЯёЁ0-9\s,.\-]/g, '').trim().slice(0, 200);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -39,9 +46,32 @@ serve(async (req) => {
 
     const { query } = await req.json();
     
-    if (!query || query.length < 2) {
+    // Validate and sanitize query
+    if (!query || typeof query !== 'string') {
+      return new Response(
+        JSON.stringify({ error: "Query is required" }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    const sanitizedQuery = sanitizeLocationQuery(query);
+    
+    if (sanitizedQuery.length < 2) {
       return new Response(
         JSON.stringify({ error: "Query too short" }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    if (sanitizedQuery.length > 200) {
+      return new Response(
+        JSON.stringify({ error: "Query too long" }),
         { 
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -61,7 +91,9 @@ serve(async (req) => {
       );
     }
 
-    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&type=city&format=json&apiKey=${apiKey}`;
+    console.log('Geocoding query:', sanitizedQuery);
+
+    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(sanitizedQuery)}&type=city&format=json&apiKey=${apiKey}`;
     
     const response = await fetch(url);
     const data = await response.json();
