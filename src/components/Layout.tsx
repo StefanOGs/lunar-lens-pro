@@ -143,17 +143,6 @@ const Layout = ({ children, user }: LayoutProps) => {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className={`w-full justify-start ${location.pathname === "/zodiac" ? "bg-primary/10 text-primary" : ""}`}
-                    asChild
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Link to="/zodiac">
-                      <Sun className="w-4 h-4 mr-2" />
-                      Зодии
-                    </Link>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
                     className={`w-full justify-start ${location.pathname === "/services" ? "bg-primary/10 text-primary" : ""}`}
                     asChild
                     onClick={() => setMobileMenuOpen(false)}

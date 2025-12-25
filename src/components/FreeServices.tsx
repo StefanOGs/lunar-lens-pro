@@ -1,60 +1,35 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Calendar, TrendingUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 const services = [
   {
     icon: Sun,
     title: "Дневен Хороскоп",
     description: "Вашата космическа прогноза за днес",
-    action: "Прочетете Сега",
-    route: "/horoscopes"
+    action: "Прочетете Сега"
   },
   {
     icon: Calendar,
     title: "Седмична Прогноза",
     description: "Планирайте седмицата си с небесна мъдрост",
-    action: "Разгледайте",
-    route: "/horoscopes"
+    action: "Разгледайте"
   },
   {
     icon: Moon,
     title: "Лунен Календар",
     description: "Следете фазите на Луната и техните влияния",
-    action: "Вижте Фазите",
-    route: "/lunar-calendar"
+    action: "Вижте Фазите"
   },
   {
     icon: TrendingUp,
     title: "Месечни Транзити",
     description: "Важни астрологични събития този месец",
-    action: "Научете Повече",
-    route: "/transits-progressions"
+    action: "Научете Повече"
   }
 ];
 
 export const FreeServices = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleServiceClick = async (route: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      toast({
-        title: "Изисква се вход",
-        description: "Моля, влезте в профила си, за да използвате тази услуга.",
-      });
-      navigate("/auth");
-      return;
-    }
-    
-    navigate(route);
-  };
-
   return (
     <section className="py-24 px-4 bg-gradient-to-b from-background to-card/30">
       <div className="container mx-auto">
@@ -65,7 +40,7 @@ export const FreeServices = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
@@ -83,11 +58,7 @@ export const FreeServices = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full group-hover:bg-primary/10"
-                    onClick={() => handleServiceClick(service.route)}
-                  >
+                  <Button variant="ghost" className="w-full group-hover:bg-primary/10">
                     {service.action}
                   </Button>
                 </CardContent>

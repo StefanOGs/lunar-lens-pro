@@ -69,41 +69,45 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
   }, [profile.zodiac_sign]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4 sm:space-y-6 px-2 sm:px-0">
+    <div className="max-w-4xl mx-auto space-y-6">
       <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
-        <CardHeader className="text-center p-4 sm:p-6">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto mb-3 sm:mb-4">
-            <Star className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
+        <CardHeader className="text-center">
+          <div className="w-20 h-20 rounded-full bg-gradient-mystical flex items-center justify-center mx-auto mb-4">
+            <Star className="w-10 h-10 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl sm:text-3xl">Здравейте, {profile.full_name}!</CardTitle>
-          <CardDescription className="text-base sm:text-lg">
+          <CardTitle className="text-3xl">Здравейте, {profile.full_name}!</CardTitle>
+          <CardDescription className="text-lg">
             Зодия: <span className="font-semibold text-foreground">{profile.zodiac_sign}</span>
           </CardDescription>
         </CardHeader>
       </Card>
 
       <Card className="bg-card/80 backdrop-blur-sm">
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-xl sm:text-2xl">Вашите Персонализирани Хороскопи</CardTitle>
+        <CardHeader>
+          <CardTitle className="text-2xl">Вашите Персонализирани Хороскопи</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+        <CardContent>
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 h-auto bg-muted/50">
-              <TabsTrigger value="daily" className="text-xs sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2">
-                <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>Дневен</span>
+            <TabsList className="flex flex-wrap justify-center gap-3 p-3 h-auto">
+              <TabsTrigger value="daily" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
+                <Calendar className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Дневен</span>
+                <span className="sm:hidden">Ден</span>
               </TabsTrigger>
-              <TabsTrigger value="weekly" className="text-xs sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2">
-                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>Седмичен</span>
+              <TabsTrigger value="weekly" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Седмичен</span>
+                <span className="sm:hidden">Седм</span>
               </TabsTrigger>
-              <TabsTrigger value="monthly" className="text-xs sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2">
-                <Star className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>Месечен</span>
+              <TabsTrigger value="monthly" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
+                <Star className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Месечен</span>
+                <span className="sm:hidden">Мес</span>
               </TabsTrigger>
-              <TabsTrigger value="yearly" className="text-xs sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2">
-                <Star className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>Годишен</span>
+              <TabsTrigger value="yearly" className="text-sm sm:text-base py-3 px-4 flex-1 min-w-[120px] sm:min-w-[140px]">
+                <Star className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Годишен</span>
+                <span className="sm:hidden">Год</span>
               </TabsTrigger>
             </TabsList>
 
