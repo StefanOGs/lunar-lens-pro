@@ -28,5 +28,110 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      /* Eclyptica Safari Stability Patch v1 (drop-in)
+         - Fixes common Safari/WebKit layout + scroll glitches
+         - Adds viewport vars (--vh) using visualViewport
+         - Adds safe flex/grid shrinking defaults
+         - Improves momentum scrolling on inner scrollers
+         - Optional: disables heavy blur during scroll to avoid "glitch"
+      */
+      (() => {
+        const ua = navigator.userAgent;
+        const isSafari = /Safari/i.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|FxiOS|Firefox/i.test(ua);
+        const isIOSWebKit =
+          /iP(ad|hone|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+        if (!isSafari && !isIOSWebKit) return;
+
+        const root = document.documentElement;
+        root.classList.add("is-webkit");
+        if (isSafari) root.classList.add("is-safari");
+        if (isIOSWebKit) root.classList.add("is-ios");
+        root.dataset.browser = isSafari ? "safari" : "webkit";
+
+        const css = `
+          html.is-webkit { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+          html.is-ios, html.is-ios body { height: -webkit-fill-available; }
+          html.is-webkit .flex, html.is-webkit .grid { min-width: 0; }
+          html.is-webkit .flex > *, html.is-webkit .grid > * { min-width: 0; min-height: 0; }
+          html.is-webkit .overflow-auto,
+          html.is-webkit .overflow-scroll,
+          html.is-webkit [data-scroll],
+          html.is-webkit .scroll-container {
+            -webkit-overflow-scrolling: touch;
+          }
+          html.is-webkit .h-screen { height: calc(var(--vh, 1vh) * 100) !important; }
+          html.is-webkit .min-h-screen { min-height: calc(var(--vh, 1vh) * 100) !important; }
+          html.is-webkit .vh-100 { height: calc(var(--vh, 1vh) * 100) !important; }
+          html.is-webkit .min-vh-100 { min-height: calc(var(--vh, 1vh) * 100) !important; }
+          .safe-top { padding-top: env(safe-area-inset-top); }
+          .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+          html.is-webkit.safari-scrolling .backdrop-blur,
+          html.is-webkit.safari-scrolling [class*="backdrop-blur"],
+          html.is-webkit.safari-scrolling [data-blur-on-scroll] {
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            * {
+              animation-duration: 0.001ms !important;
+              animation-iteration-count: 1 !important;
+              transition-duration: 0.001ms !important;
+              scroll-behavior: auto !important;
+            }
+          }
+        `;
+        const style = document.createElement("style");
+        style.setAttribute("data-safari-patch", "1");
+        style.textContent = css;
+        document.head.appendChild(style);
+
+        let raf = 0;
+        const setVars = () => {
+          raf = 0;
+          const vv = window.visualViewport;
+          const h = vv ? vv.height : window.innerHeight;
+          const w = vv ? vv.width : window.innerWidth;
+          root.style.setProperty("--vh", `${h * 0.01}px`);
+          root.style.setProperty("--vw", `${w * 0.01}px`);
+          root.style.setProperty("--vvh", `${h}px`);
+          root.style.setProperty("--vvw", `${w}px`);
+        };
+        const schedule = () => {
+          if (raf) return;
+          raf = requestAnimationFrame(setVars);
+        };
+
+        schedule();
+        window.addEventListener("resize", schedule, { passive: true });
+        window.addEventListener("orientationchange", schedule, { passive: true });
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener("resize", schedule, { passive: true });
+          window.visualViewport.addEventListener("scroll", schedule, { passive: true });
+        }
+
+        let scrollTimer = 0;
+        const onScroll = () => {
+          if (!root.classList.contains("safari-scrolling")) root.classList.add("safari-scrolling");
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(() => root.classList.remove("safari-scrolling"), 140);
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+
+        const forceReflow = () => {
+          if (document.body) void document.body.offsetHeight;
+          schedule();
+        };
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => requestAnimationFrame(forceReflow), { once: true });
+        } else {
+          requestAnimationFrame(forceReflow);
+        }
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => requestAnimationFrame(forceReflow)).catch(() => {});
+        }
+      })();
+    </script>
   </body>
 </html>
