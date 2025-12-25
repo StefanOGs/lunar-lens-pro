@@ -19,9 +19,15 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
   const [yearlyHoroscope, setYearlyHoroscope] = useState("");
   const [activeTab, setActiveTab] = useState("daily");
 
-  const generateHoroscope = async (type: 'daily' | 'weekly' | 'monthly' | 'yearly') => {
+  const generateHoroscope = async (type: 'daily' | 'weekly' | 'monthly' | 'yearly', retryCount = 0) => {
     setLoading(true);
     try {
+      // Refresh session before making the request to ensure valid token
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        throw new Error("Моля, влезте отново в профила си");
+      }
+
       const { data, error } = await supabase.functions.invoke('generate-horoscope', {
         body: {
           type,
@@ -29,7 +35,14 @@ const HoroscopeDisplay = ({ profile }: HoroscopeDisplayProps) => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        // If auth error and haven't retried, refresh session and retry once
+        if ((error.message?.includes('401') || error.message?.includes('authentication')) && retryCount === 0) {
+          await supabase.auth.refreshSession();
+          return generateHoroscope(type, 1);
+        }
+        throw error;
+      }
 
       if (type === 'daily') setDailyHoroscope(data.horoscope);
       else if (type === 'weekly') setWeeklyHoroscope(data.horoscope);
