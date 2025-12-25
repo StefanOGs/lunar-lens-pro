@@ -22,6 +22,9 @@ import ZodiacOverview from "./pages/ZodiacOverview";
 import ZodiacDetails from "./pages/ZodiacDetails";
 import Plans from "./pages/Plans";
 import Reports from "./pages/Reports";
+import Dreams from "./pages/Dreams";
+import DreamNew from "./pages/DreamNew";
+import DreamView from "./pages/DreamView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +55,9 @@ const App = () => (
           <Route path="/reports" element={<Reports />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
+          <Route path="/dreams" element={<Dreams />} />
+          <Route path="/dreams/new" element={<DreamNew />} />
+          <Route path="/dreams/:id" element={<DreamView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
