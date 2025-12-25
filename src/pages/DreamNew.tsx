@@ -5,7 +5,6 @@ import { User } from '@supabase/supabase-js';
 import Layout from '@/components/Layout';
 import { Moon } from 'lucide-react';
 import { DreamEditor, useDreams, DreamFormData } from '@/features/dreams';
-import { Helmet } from 'react-helmet';
 
 export default function DreamNew() {
   const navigate = useNavigate();
@@ -57,10 +56,6 @@ export default function DreamNew() {
 
   return (
     <Layout user={user}>
-      <Helmet>
-        <title>Нов сън | Eclyptica</title>
-        <meta name="description" content="Запиши новия си сън в дневника" />
-      </Helmet>
 
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         <h1 className="text-3xl font-bold flex items-center gap-3 mb-8">
