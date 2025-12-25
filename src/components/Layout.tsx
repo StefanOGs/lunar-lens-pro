@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown, FileText, Home, Sparkles, Sun, Star, Info, Moon } from "lucide-react";
+import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown, FileText, Home, Sparkles, Sun, Star, Info, Moon, Zap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { User } from "@supabase/supabase-js";
@@ -87,6 +87,12 @@ const Layout = ({ children, user }: LayoutProps) => {
                 <Link to="/dreams">
                   <Moon className="w-4 h-4 mr-1" />
                   Сънища
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild className={location.pathname.startsWith("/symbols") ? "border-b-2 border-primary rounded-none" : ""}>
+                <Link to="/symbols">
+                  <Zap className="w-4 h-4 mr-1" />
+                  Символи
                 </Link>
               </Button>
             </nav>
@@ -211,6 +217,17 @@ const Layout = ({ children, user }: LayoutProps) => {
                     <Link to="/dreams">
                       <Moon className="w-4 h-4 mr-2" />
                       Сънища
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className={`w-full justify-start ${location.pathname.startsWith("/symbols") ? "bg-primary/10 text-primary" : ""}`}
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link to="/symbols">
+                      <Zap className="w-4 h-4 mr-2" />
+                      Символи
                     </Link>
                   </Button>
                 </nav>

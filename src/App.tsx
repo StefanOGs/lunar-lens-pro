@@ -25,6 +25,9 @@ import Reports from "./pages/Reports";
 import Dreams from "./pages/Dreams";
 import DreamNew from "./pages/DreamNew";
 import DreamView from "./pages/DreamView";
+import Symbols from "./pages/Symbols";
+import SymbolNew from "./pages/SymbolNew";
+import SymbolView from "./pages/SymbolView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -58,6 +61,9 @@ const App = () => (
           <Route path="/dreams" element={<Dreams />} />
           <Route path="/dreams/new" element={<DreamNew />} />
           <Route path="/dreams/:id" element={<DreamView />} />
+          <Route path="/symbols" element={<Symbols />} />
+          <Route path="/symbols/new" element={<SymbolNew />} />
+          <Route path="/symbols/:id" element={<SymbolView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
