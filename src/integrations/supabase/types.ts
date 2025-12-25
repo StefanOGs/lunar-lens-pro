@@ -301,6 +301,128 @@ export type Database = {
         }
         Relationships: []
       }
+      symbol_categories: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      symbol_insights: {
+        Row: {
+          created_at: string
+          freud: string | null
+          id: string
+          jung: string | null
+          pattern: Json | null
+          symbol_log_id: string
+        }
+        Insert: {
+          created_at?: string
+          freud?: string | null
+          id?: string
+          jung?: string | null
+          pattern?: Json | null
+          symbol_log_id: string
+        }
+        Update: {
+          created_at?: string
+          freud?: string | null
+          id?: string
+          jung?: string | null
+          pattern?: Json | null
+          symbol_log_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "symbol_insights_symbol_log_id_fkey"
+            columns: ["symbol_log_id"]
+            isOneToOne: false
+            referencedRelation: "symbols_log"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      symbol_map: {
+        Row: {
+          category_id: string
+          symbol_log_id: string
+        }
+        Insert: {
+          category_id: string
+          symbol_log_id: string
+        }
+        Update: {
+          category_id?: string
+          symbol_log_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "symbol_map_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "symbol_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "symbol_map_symbol_log_id_fkey"
+            columns: ["symbol_log_id"]
+            isOneToOne: false
+            referencedRelation: "symbols_log"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      symbols_log: {
+        Row: {
+          context: string | null
+          created_at: string
+          id: string
+          intensity: number | null
+          logged_at: string
+          symbol: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          id?: string
+          intensity?: number | null
+          logged_at?: string
+          symbol: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          id?: string
+          intensity?: number | null
+          logged_at?: string
+          symbol?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
