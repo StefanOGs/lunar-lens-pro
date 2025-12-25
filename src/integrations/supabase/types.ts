@@ -14,6 +14,170 @@ export type Database = {
   }
   public: {
     Tables: {
+      dream_analysis: {
+        Row: {
+          approach: Database["public"]["Enums"]["dream_analysis_approach"]
+          archetypes: Json | null
+          confidence: number | null
+          created_at: string
+          dream_id: string
+          id: string
+          key_symbols: Json | null
+          summary: string | null
+          themes: Json | null
+        }
+        Insert: {
+          approach?: Database["public"]["Enums"]["dream_analysis_approach"]
+          archetypes?: Json | null
+          confidence?: number | null
+          created_at?: string
+          dream_id: string
+          id?: string
+          key_symbols?: Json | null
+          summary?: string | null
+          themes?: Json | null
+        }
+        Update: {
+          approach?: Database["public"]["Enums"]["dream_analysis_approach"]
+          archetypes?: Json | null
+          confidence?: number | null
+          created_at?: string
+          dream_id?: string
+          id?: string
+          key_symbols?: Json | null
+          summary?: string | null
+          themes?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dream_analysis_dream_id_fkey"
+            columns: ["dream_id"]
+            isOneToOne: false
+            referencedRelation: "dreams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dream_symbols: {
+        Row: {
+          created_at: string
+          id: string
+          meaning_freud: string | null
+          meaning_jung: string | null
+          notes: string | null
+          symbol: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meaning_freud?: string | null
+          meaning_jung?: string | null
+          notes?: string | null
+          symbol: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meaning_freud?: string | null
+          meaning_jung?: string | null
+          notes?: string | null
+          symbol?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      dream_tag_map: {
+        Row: {
+          dream_id: string
+          tag_id: string
+        }
+        Insert: {
+          dream_id: string
+          tag_id: string
+        }
+        Update: {
+          dream_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dream_tag_map_dream_id_fkey"
+            columns: ["dream_id"]
+            isOneToOne: false
+            referencedRelation: "dreams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dream_tag_map_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "dream_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dream_tags: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      dreams: {
+        Row: {
+          body: string
+          created_at: string
+          dream_date: string
+          id: string
+          mood: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          dream_date?: string
+          id?: string
+          mood?: number | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          dream_date?: string
+          id?: string
+          mood?: number | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       one_time_purchases: {
         Row: {
           credits_remaining: number
@@ -173,6 +337,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      dream_analysis_approach: "jung" | "freud" | "mixed"
       subscription_plan: "FREE" | "BASIC" | "PREMIUM" | "LIFETIME"
     }
     CompositeTypes: {
@@ -302,6 +467,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      dream_analysis_approach: ["jung", "freud", "mixed"],
       subscription_plan: ["FREE", "BASIC", "PREMIUM", "LIFETIME"],
     },
   },
