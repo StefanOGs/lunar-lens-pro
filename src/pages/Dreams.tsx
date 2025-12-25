@@ -6,7 +6,6 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Plus, Moon } from 'lucide-react';
 import { DreamList, useDreams } from '@/features/dreams';
-import { Helmet } from 'react-helmet';
 
 export default function Dreams() {
   const navigate = useNavigate();
@@ -45,10 +44,6 @@ export default function Dreams() {
 
   return (
     <Layout user={user}>
-      <Helmet>
-        <title>Дневник на сънищата | Eclyptica</title>
-        <meta name="description" content="Записвай и анализирай сънищата си с юнгиански и фройдистки методи" />
-      </Helmet>
 
       <div className="container mx-auto px-4 py-8">
         {/* Header */}

@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown, FileText, Home, Sparkles, Sun, Star, Info } from "lucide-react";
+import { LogOut, UserIcon, Settings, ArrowLeft, Menu, Crown, FileText, Home, Sparkles, Sun, Star, Info, Moon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { User } from "@supabase/supabase-js";
@@ -81,6 +81,12 @@ const Layout = ({ children, user }: LayoutProps) => {
                 <Link to="/plans">
                   <Crown className="w-4 h-4 mr-1" />
                   Планове
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild className={location.pathname.startsWith("/dreams") ? "border-b-2 border-primary rounded-none" : ""}>
+                <Link to="/dreams">
+                  <Moon className="w-4 h-4 mr-1" />
+                  Сънища
                 </Link>
               </Button>
             </nav>
@@ -194,6 +200,17 @@ const Layout = ({ children, user }: LayoutProps) => {
                     <Link to="/plans">
                       <Crown className="w-4 h-4 mr-2" />
                       Планове
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className={`w-full justify-start ${location.pathname.startsWith("/dreams") ? "bg-primary/10 text-primary" : ""}`}
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link to="/dreams">
+                      <Moon className="w-4 h-4 mr-2" />
+                      Сънища
                     </Link>
                   </Button>
                 </nav>
