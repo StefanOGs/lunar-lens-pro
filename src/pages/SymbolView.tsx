@@ -57,7 +57,7 @@ export default function SymbolView() {
   } = useSymbols(user?.id);
 
   const loadSymbol = useCallback(async () => {
-    if (!id || symbols.length === 0) return;
+    if (!id) return;
     
     setDetailLoading(true);
     const result = await getSymbolWithInsight(id);
@@ -67,11 +67,15 @@ export default function SymbolView() {
       document.title = `${result.symbol.symbol} | Eclyptica`;
     }
     setDetailLoading(false);
-  }, [id, symbols, getSymbolWithInsight]);
+  }, [id, getSymbolWithInsight]);
 
+  // Only load when id changes or when symbols are first loaded
+  const symbolsLoaded = symbols.length > 0;
   useEffect(() => {
-    loadSymbol();
-  }, [loadSymbol]);
+    if (symbolsLoaded) {
+      loadSymbol();
+    }
+  }, [id, symbolsLoaded]);
 
   const handleDelete = async () => {
     if (!id) return;
