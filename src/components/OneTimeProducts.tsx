@@ -1,7 +1,9 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const products = [
   {
@@ -13,7 +15,8 @@ const products = [
       "Персонален текст с вашето име",
       "Практически съвети за деня",
       "Какво да правиш / избягваш",
-    ]
+    ],
+    route: "/personal-forecast"
   },
   {
     icon: Heart,
@@ -24,11 +27,30 @@ const products = [
       "6 аспекта на съвместимост",
       "Емоции, комуникация, страст",
       "Дългосрочен потенциал",
-    ]
+    ],
+    route: "/compatibility"
   },
 ];
 
 export const OneTimeProducts = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleProductClick = async (route: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      toast({
+        title: "Изисква се вход",
+        description: "Моля, влезте в профила си, за да закупите тази услуга.",
+      });
+      navigate("/auth");
+      return;
+    }
+    
+    navigate(route);
+  };
+
   return (
     <section className="py-24 px-4">
       <div className="container mx-auto">
@@ -71,8 +93,12 @@ export const OneTimeProducts = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full" size="lg" asChild>
-                    <Link to="/auth">Купи</Link>
+                  <Button 
+                    className="w-full" 
+                    size="lg"
+                    onClick={() => handleProductClick(product.route)}
+                  >
+                    Купи
                   </Button>
                 </CardFooter>
               </Card>

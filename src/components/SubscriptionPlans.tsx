@@ -2,7 +2,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, X, Crown, Star, Sparkles, Infinity } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const plans = [
   {
@@ -64,6 +66,24 @@ const plans = [
 ];
 
 export const SubscriptionPlans = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handlePlanClick = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      toast({
+        title: "Изисква се вход",
+        description: "Моля, влезте в профила си, за да изберете план.",
+      });
+      navigate("/auth");
+      return;
+    }
+    
+    navigate("/plans");
+  };
+
   return (
     <section className="py-24 px-4 bg-gradient-to-b from-card/30 to-background">
       <div className="container mx-auto">
@@ -74,7 +94,7 @@ export const SubscriptionPlans = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {plans.map((plan, index) => {
             const Icon = plan.icon;
             return (
@@ -82,7 +102,7 @@ export const SubscriptionPlans = () => {
                 key={index}
                 className={`flex flex-col relative ${
                   plan.popular 
-                    ? 'shadow-glow border-primary scale-105 bg-gradient-to-b from-primary/5 to-card' 
+                    ? 'shadow-glow border-primary sm:scale-105 bg-gradient-to-b from-primary/5 to-card' 
                     : 'hover:shadow-card bg-card/50'
                 } transition-all duration-300`}
               >
@@ -134,9 +154,9 @@ export const SubscriptionPlans = () => {
                     className="w-full" 
                     size="default"
                     variant={plan.popular ? "default" : "outline"}
-                    asChild
+                    onClick={handlePlanClick}
                   >
-                    <Link to="/auth">Започнете Сега</Link>
+                    Започнете Сега
                   </Button>
                 </CardFooter>
               </Card>
