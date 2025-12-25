@@ -65,16 +65,16 @@ const plans = [
 
 export const SubscriptionPlans = () => {
   return (
-    <section className="py-24 px-4 bg-gradient-to-b from-card/30 to-background">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-b from-card/30 to-background">
       <div className="container mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold">Абонаментни Планове</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mb-10 sm:mb-16 space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">Абонаментни Планове</h2>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Изберете планът, който отговаря на вашето космическо пътуване
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto">
           {plans.map((plan, index) => {
             const Icon = plan.icon;
             return (
@@ -82,37 +82,37 @@ export const SubscriptionPlans = () => {
                 key={index}
                 className={`flex flex-col relative ${
                   plan.popular 
-                    ? 'shadow-glow border-primary scale-105 bg-gradient-to-b from-primary/5 to-card' 
+                    ? 'shadow-glow border-primary sm:scale-105 bg-gradient-to-b from-primary/5 to-card' 
                     : 'hover:shadow-card bg-card/50'
                 } transition-all duration-300`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-1 shadow-lg">
+                  <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2">
+                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 sm:px-4 py-1 shadow-lg text-xs sm:text-sm">
                       Най-популярен
                     </Badge>
                   </div>
                 )}
                 
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center ${
+                <CardHeader className="text-center pb-4 p-4 sm:p-6">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full flex items-center justify-center ${
                     plan.popular ? 'bg-primary/20' : 'bg-muted'
                   }`}>
-                    <Icon className={`w-6 h-6 ${plan.popular ? 'text-primary' : 'text-muted-foreground'}`} />
+                    <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${plan.popular ? 'text-primary' : 'text-muted-foreground'}`} />
                   </div>
-                  <CardTitle className="text-xl">{plan.name}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">{plan.name}</CardTitle>
                   <CardDescription className="text-sm">
                     {plan.description}
                   </CardDescription>
                   <div className="pt-2">
-                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className="text-3xl sm:text-4xl font-bold">{plan.price}</span>
                     <span className="text-muted-foreground ml-1 text-sm">
                       лв{plan.period ? `/${plan.period}` : plan.oneTime ? ' еднократно' : ''}
                     </span>
                   </div>
                 </CardHeader>
                 
-                <CardContent className="flex-1">
+                <CardContent className="flex-1 p-4 sm:p-6 pt-0">
                   <ul className="space-y-2">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export const SubscriptionPlans = () => {
                         ) : (
                           <X className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                         )}
-                        <span className={`text-sm ${!feature.included ? 'text-muted-foreground' : ''}`}>
+                        <span className={`text-xs sm:text-sm ${!feature.included ? 'text-muted-foreground' : ''}`}>
                           {feature.name}
                         </span>
                       </li>
@@ -129,7 +129,7 @@ export const SubscriptionPlans = () => {
                   </ul>
                 </CardContent>
                 
-                <CardFooter className="pt-4">
+                <CardFooter className="pt-4 p-4 sm:p-6">
                   <Button 
                     className="w-full" 
                     size="default"
@@ -144,8 +144,8 @@ export const SubscriptionPlans = () => {
           })}
         </div>
         
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground">
+        <div className="text-center mt-8 sm:mt-12">
+          <p className="text-muted-foreground text-sm sm:text-base">
             Всички планове включват 7-дневен пробен период без ангажимент
           </p>
         </div>
